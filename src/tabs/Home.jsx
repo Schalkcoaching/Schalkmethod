@@ -18,35 +18,33 @@ export default function Home({ setActiveTab, mobile }) {
   const today = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })
 
   return (
-    <div style={{ padding: mobile ? '16px 14px 20px' : '40px', minHeight: '100vh', background: '#F7F3EE' }}>
+    <div style={{ padding: mobile ? '14px 14px 80px' : '40px', minHeight: '100vh', background: '#F7F3EE', boxSizing: 'border-box' }}>
+
       {/* Hero */}
       <div style={{
-        borderRadius: '20px', background: '#1C1917',
-        padding: '60px 52px', position: 'relative', overflow: 'hidden', marginBottom: '28px',
+        borderRadius: '16px', background: '#1C1917',
+        padding: mobile ? '28px 22px' : '60px 52px',
+        position: 'relative', overflow: 'hidden', marginBottom: mobile ? '16px' : '28px',
       }}>
-        <div style={{
-          position: 'absolute', top: '-80px', right: '-80px', width: '360px', height: '360px',
-          background: 'radial-gradient(circle, rgba(196,168,130,0.12) 0%, transparent 70%)', pointerEvents: 'none',
-        }} />
+        <div style={{ position: 'absolute', top: '-80px', right: '-80px', width: '300px', height: '300px', background: 'radial-gradient(circle, rgba(196,168,130,0.12) 0%, transparent 70%)', pointerEvents: 'none' }} />
         <div style={{ position: 'relative', zIndex: 1 }}>
-          <div style={{ fontSize: '12px', color: '#C4A882', fontWeight: 600, letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '18px' }}>
+          <div style={{ fontSize: '11px', color: '#C4A882', fontWeight: 600, letterSpacing: '1.5px', textTransform: 'uppercase', marginBottom: '12px' }}>
             {today}
           </div>
-          <h1 style={{ fontSize: '44px', fontWeight: 900, lineHeight: 1.1, marginBottom: '18px', color: '#F7F3EE' }}>
-            You've Come to the<br />Right Place to<br /><span style={{ color: '#C4A882' }}>Change Your Life.</span>
+          <h1 style={{ fontSize: mobile ? '26px' : '44px', fontWeight: 900, lineHeight: 1.15, marginBottom: '12px', color: '#F7F3EE' }}>
+            {mobile ? <>You've Come to the<br /><span style={{ color: '#C4A882' }}>Right Place.</span></> : <>You've Come to the<br />Right Place to<br /><span style={{ color: '#C4A882' }}>Change Your Life.</span></>}
           </h1>
-          <p style={{ fontSize: '15px', color: '#8C7E72', maxWidth: '480px', lineHeight: 1.7 }}>
-            Every rep, every meal, every check-in brings you closer to the version of yourself you've always wanted to be. Let's make today count.
+          <p style={{ fontSize: mobile ? '13px' : '15px', color: '#8C7E72', maxWidth: '480px', lineHeight: 1.6 }}>
+            Every rep, every meal, every check-in brings you closer to the version of yourself you've always wanted to be.
           </p>
           <button
             onClick={() => setActiveTab('goals')}
             style={{
-              marginTop: '28px', padding: '14px 32px', borderRadius: '12px', border: 'none',
-              cursor: 'pointer', fontSize: '14px', fontWeight: 700,
-              background: '#C4A882', color: '#1C1917', letterSpacing: '0.3px', transition: 'background 0.2s',
+              marginTop: mobile ? '18px' : '28px', padding: mobile ? '12px 22px' : '14px 32px',
+              borderRadius: '12px', border: 'none', cursor: 'pointer',
+              fontSize: mobile ? '13px' : '14px', fontWeight: 700,
+              background: '#C4A882', color: '#1C1917', letterSpacing: '0.3px',
             }}
-            onMouseOver={e => e.target.style.background = '#D4B892'}
-            onMouseOut={e => e.target.style.background = '#C4A882'}
           >
             Start Today's Check-In →
           </button>
@@ -54,17 +52,16 @@ export default function Home({ setActiveTab, mobile }) {
       </div>
 
       {/* Quick Stats */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '14px', marginBottom: '28px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: mobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', gap: mobile ? '10px' : '14px', marginBottom: mobile ? '16px' : '28px' }}>
         {quickStats.map(stat => (
           <div key={stat.label} style={{
-            background: '#FFFFFF', border: '1px solid #EDE8E0', borderRadius: '14px',
-            padding: '20px', display: 'flex', alignItems: 'center', gap: '14px',
-            boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
+            background: '#FFFFFF', border: '1px solid #EDE8E0', borderRadius: '12px',
+            padding: mobile ? '14px' : '20px', display: 'flex', alignItems: 'center', gap: mobile ? '10px' : '14px',
           }}>
-            <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: `${stat.color}18`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px' }}>{stat.icon}</div>
+            <div style={{ width: mobile ? '36px' : '44px', height: mobile ? '36px' : '44px', borderRadius: '10px', background: `${stat.color}18`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: mobile ? '18px' : '20px', flexShrink: 0 }}>{stat.icon}</div>
             <div>
-              <div style={{ fontSize: '22px', fontWeight: 800, color: '#1A1410' }}>{stat.value}</div>
-              <div style={{ fontSize: '12px', color: '#9C8E84' }}>{stat.label}</div>
+              <div style={{ fontSize: mobile ? '18px' : '22px', fontWeight: 800, color: '#1A1410' }}>{stat.value}</div>
+              <div style={{ fontSize: mobile ? '10px' : '12px', color: '#9C8E84' }}>{stat.label}</div>
             </div>
           </div>
         ))}
@@ -72,30 +69,23 @@ export default function Home({ setActiveTab, mobile }) {
 
       {/* Quick Access */}
       <div>
-        <h2 style={{ fontSize: '11px', fontWeight: 700, color: '#9C8E84', marginBottom: '14px', textTransform: 'uppercase', letterSpacing: '1.5px' }}>
+        <h2 style={{ fontSize: '11px', fontWeight: 700, color: '#9C8E84', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '1.5px' }}>
           Quick Access
         </h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: mobile ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)', gap: '10px' }}>
           {quickLinks.map(link => (
             <button
               key={link.id}
               onClick={() => setActiveTab(link.id)}
               style={{
-                display: 'flex', alignItems: 'center', gap: '12px', padding: '16px 18px',
+                display: 'flex', alignItems: 'center', gap: '10px',
+                padding: mobile ? '12px 14px' : '16px 18px',
                 background: '#FFFFFF', border: '1px solid #EDE8E0', borderRadius: '12px',
-                cursor: 'pointer', color: '#1A1410', fontSize: '13.5px', fontWeight: 500,
-                textAlign: 'left', transition: 'all 0.15s', boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
-              }}
-              onMouseOver={e => {
-                e.currentTarget.style.borderColor = link.color + '44'
-                e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)'
-              }}
-              onMouseOut={e => {
-                e.currentTarget.style.borderColor = '#EDE8E0'
-                e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.04)'
+                cursor: 'pointer', color: '#1A1410', fontSize: mobile ? '12px' : '13.5px',
+                fontWeight: 500, textAlign: 'left',
               }}
             >
-              <span style={{ fontSize: '18px', width: '36px', height: '36px', background: link.color + '14', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>{link.icon}</span>
+              <span style={{ fontSize: mobile ? '16px' : '18px', width: mobile ? '30px' : '36px', height: mobile ? '30px' : '36px', background: link.color + '14', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>{link.icon}</span>
               {link.label}
             </button>
           ))}
@@ -104,12 +94,12 @@ export default function Home({ setActiveTab, mobile }) {
 
       {/* Quote */}
       <div style={{
-        marginTop: '24px', padding: '20px 24px', background: '#FFFFFF',
-        border: '1px solid #EDE8E0', borderRadius: '14px', borderLeft: '3px solid #C4A882',
-        boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
+        marginTop: mobile ? '16px' : '24px', padding: mobile ? '16px' : '20px 24px',
+        background: '#FFFFFF', border: '1px solid #EDE8E0', borderRadius: '14px',
+        borderLeft: '3px solid #C4A882',
       }}>
         <div style={{ fontSize: '11px', color: '#9C8E84', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '1px' }}>Daily Motivation</div>
-        <div style={{ fontSize: '14px', color: '#4A3E35', fontStyle: 'italic', lineHeight: 1.6 }}>
+        <div style={{ fontSize: mobile ? '13px' : '14px', color: '#4A3E35', fontStyle: 'italic', lineHeight: 1.6 }}>
           "The body achieves what the mind believes. Show up today — your future self is counting on you."
         </div>
       </div>
