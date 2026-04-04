@@ -9,15 +9,21 @@ export default function AuthScreen({ onAuth }) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
+  const [keepSignedIn, setKeepSignedIn] = useState(() => localStorage.getItem('tsm_keep_signed_in') !== 'false')
 
   const isMobile = window.innerWidth < 768
 
   const handleLogin = async () => {
     if (!email || !password) return setError('Please fill in all fields.')
     setLoading(true); setError('')
+    localStorage.setItem('tsm_keep_signed_in', keepSignedIn ? 'true' : 'false')
     const { error: err } = await supabase.auth.signInWithPassword({ email, password })
     setLoading(false)
     if (err) setError(err.message)
+    else if (!keepSignedIn) {
+      // Mark as session-only — App.jsx will sign out on next fresh page load
+      sessionStorage.setItem('tsm_session_active', 'true')
+    }
   }
 
   const handleSignup = async () => {
@@ -88,6 +94,17 @@ export default function AuthScreen({ onAuth }) {
               <label style={lbl}>
                 Password
                 <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••" style={inp} autoComplete="current-password" />
+              </label>
+            )}
+            {mode === 'login' && (
+              <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', userSelect: 'none' }}>
+                <input
+                  type="checkbox"
+                  checked={keepSignedIn}
+                  onChange={e => setKeepSignedIn(e.target.checked)}
+                  style={{ width: '16px', height: '16px', accentColor: '#C4A882', cursor: 'pointer' }}
+                />
+                <span style={{ fontSize: '13px', color: '#6B5E54' }}>Keep me signed in</span>
               </label>
             )}
             <button
@@ -175,6 +192,17 @@ export default function AuthScreen({ onAuth }) {
               <label style={lbl}>
                 Password
                 <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••" style={inp} />
+              </label>
+            )}
+            {mode === 'login' && (
+              <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', userSelect: 'none' }}>
+                <input
+                  type="checkbox"
+                  checked={keepSignedIn}
+                  onChange={e => setKeepSignedIn(e.target.checked)}
+                  style={{ width: '16px', height: '16px', accentColor: '#C4A882', cursor: 'pointer' }}
+                />
+                <span style={{ fontSize: '13px', color: '#6B5E54' }}>Keep me signed in</span>
               </label>
             )}
             <button

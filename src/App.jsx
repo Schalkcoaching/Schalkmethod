@@ -31,8 +31,15 @@ function App() {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth)
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null)
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      // If user chose NOT to keep signed in and this is a fresh page load
+      // (sessionStorage cleared = new browser session), sign them out
+      if (session && localStorage.getItem('tsm_keep_signed_in') === 'false' && !sessionStorage.getItem('tsm_session_active')) {
+        await supabase.auth.signOut()
+        setUser(null)
+      } else {
+        setUser(session?.user ?? null)
+      }
     })
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null)
