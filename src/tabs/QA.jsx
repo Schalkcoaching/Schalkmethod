@@ -108,7 +108,7 @@ export default function QA({ mobile }) {
             style={{
               background: '#1C1917',
               border: 'none', borderRadius: '10px', padding: '12px 26px',
-              color: '#1A1410', fontSize: '14px', fontWeight: 700, cursor: 'pointer',
+              color: '#F7F3EE', fontSize: '14px', fontWeight: 700, cursor: 'pointer',
               opacity: form.message.trim() ? 1 : 0.4,
             }}
           >
