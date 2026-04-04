@@ -1,26 +1,25 @@
 import { useState, useEffect } from 'react'
 
 const DEFAULT_GOALS = [
-  { id: 1, label: 'Drink 2.5L of water',       icon: '💧', category: 'Health' },
-  { id: 2, label: 'Complete workout',            icon: '💪', category: 'Fitness' },
-  { id: 3, label: 'Eat 3 balanced meals',        icon: '🥗', category: 'Nutrition' },
-  { id: 4, label: 'Get 7-8 hours of sleep',      icon: '😴', category: 'Recovery' },
-  { id: 5, label: 'Take progress measurements',  icon: '📏', category: 'Tracking' },
-  { id: 6, label: '10 minutes of mindfulness',   icon: '🧘', category: 'Mindset' },
-  { id: 7, label: 'Hit protein target',          icon: '🥩', category: 'Nutrition' },
-  { id: 8, label: '10,000 steps',               icon: '👟', category: 'Activity' },
+  { id: 1,  label: 'Drink 2.5L of water',                    icon: '💧', category: 'Health' },
+  { id: 2,  label: 'Complete workout',                         icon: '💪', category: 'Fitness' },
+  { id: 4,  label: 'Get 7-8 hours of sleep',                  icon: '😴', category: 'Recovery' },
+  { id: 8,  label: '10,000 steps',                            icon: '👟', category: 'Activity' },
+  { id: 9,  label: 'Micronutrient target hit!',               icon: '🎯', category: 'Nutrition' },
+  { id: 10, label: '30 minutes minimum of sunlight per day',  icon: '☀️', category: 'Health' },
+  { id: 11, label: 'No phone first 30 min of the day',        icon: '📵', category: 'Mindset' },
 ]
 
 const todayKey = () => `coachpro_goals_${new Date().toDateString()}`
 
-export default function DailyGoals() {
+export default function DailyGoals({ mobile }) {
   const [checked, setChecked] = useState(() => {
     try { return JSON.parse(localStorage.getItem(todayKey()) || '{}') } catch { return {} }
   })
   const [customGoal, setCustomGoal] = useState('')
   const [goals, setGoals] = useState(() => {
     try {
-      const saved = JSON.parse(localStorage.getItem('coachpro_custom_goals') || 'null')
+      const saved = JSON.parse(localStorage.getItem('coachpro_custom_goals_v2') || 'null')
       return saved || DEFAULT_GOALS
     } catch { return DEFAULT_GOALS }
   })
@@ -36,14 +35,14 @@ export default function DailyGoals() {
     const newGoal = { id: Date.now(), label: customGoal.trim(), icon: '⭐', category: 'Custom' }
     const updated = [...goals, newGoal]
     setGoals(updated)
-    localStorage.setItem('coachpro_custom_goals', JSON.stringify(updated))
+    localStorage.setItem('coachpro_custom_goals_v2', JSON.stringify(updated))
     setCustomGoal('')
   }
 
   const removeGoal = (id) => {
     const updated = goals.filter(g => g.id !== id)
     setGoals(updated)
-    localStorage.setItem('coachpro_custom_goals', JSON.stringify(updated))
+    localStorage.setItem('coachpro_custom_goals_v2', JSON.stringify(updated))
   }
 
   const completedCount = goals.filter(g => checked[g.id]).length
@@ -51,7 +50,7 @@ export default function DailyGoals() {
   const today = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })
 
   return (
-    <div style={{ padding: '40px', minHeight: '100vh', background: '#F7F3EE' }}>
+    <div style={{ padding: mobile ? '16px 14px 20px' : '40px', minHeight: '100vh', background: '#F7F3EE' }}>
       <PageHeader icon="✅" title="Daily Goals" sub={today} />
 
       {/* Progress ring */}

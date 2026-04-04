@@ -14,11 +14,11 @@ const quickLinks = [
   { id: 'qa',        label: 'Ask Your Coach',     icon: '💬', color: '#BE185D' },
 ]
 
-export default function Home({ setActiveTab }) {
+export default function Home({ setActiveTab, mobile }) {
   const today = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })
 
   return (
-    <div style={{ padding: '40px', minHeight: '100vh', background: '#F7F3EE' }}>
+    <div style={{ padding: mobile ? '16px 14px 20px' : '40px', minHeight: '100vh', background: '#F7F3EE' }}>
       {/* Hero */}
       <div style={{
         borderRadius: '20px', background: '#1C1917',

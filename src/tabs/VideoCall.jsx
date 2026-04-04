@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { supabase } from '../lib/supabase'
 
 const timeSlots = ['9:00 AM', '10:00 AM', '11:00 AM', '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM']
 
@@ -8,15 +9,15 @@ function loadSessions() {
   try { return JSON.parse(localStorage.getItem(SESSIONS_KEY) || '[]') } catch { return [] }
 }
 
-export default function VideoCall() {
+export default function VideoCall({ user, mobile }) {
   const [sessions, setSessions] = useState(loadSessions)
   const [booking, setBooking] = useState(false)
   const [form, setForm] = useState({ date: '', time: '', type: 'Weekly Check-In', notes: '' })
   const [booked, setBooked] = useState(false)
 
-  const sessionTypes = ['Weekly Check-In', 'Nutrition Review', 'Program Planning', 'Mindset Session', 'Emergency Support']
+  const sessionTypes = ['Weekly Check-In', 'Nutrition Review', 'Program Planning', 'Body Composition Review', 'Emergency Support']
 
-  const handleBook = () => {
+  const handleBook = async () => {
     if (!form.date || !form.time) return
     const session = {
       id: Date.now(),
@@ -27,6 +28,19 @@ export default function VideoCall() {
     const updated = [session, ...sessions]
     setSessions(updated)
     localStorage.setItem(SESSIONS_KEY, JSON.stringify(updated))
+
+    // Save to Supabase so coach gets notified
+    if (user) {
+      await supabase.from('sessions').insert({
+        user_id: user.id,
+        type: form.type,
+        date: form.date,
+        time: form.time,
+        notes: form.notes,
+        status: 'Scheduled',
+      })
+    }
+
     setBooking(false)
     setBooked(true)
     setForm({ date: '', time: '', type: 'Weekly Check-In', notes: '' })
@@ -40,15 +54,16 @@ export default function VideoCall() {
   }
 
   const upcomingSessions = sessions.filter(s => s.status === 'Scheduled')
+  const p = mobile ? '16px 14px 20px' : '40px'
 
   return (
-    <div style={{ padding: '40px', minHeight: '100vh', background: '#F7F3EE' }}>
-      <PageHeader icon="📹" title="Video Call & Sessions" sub="Schedule and join your weekly coaching calls" />
+    <div style={{ padding: p, minHeight: '100vh', background: '#F7F3EE' }}>
+      <PageHeader icon="📹" title="Video Call & Sessions" sub="Schedule your 1-on-1 coaching calls" />
 
       {booked && (
         <div style={{ background: '#F0FAF4', border: '1px solid #BBF7D0', borderRadius: '12px', padding: '14px 20px', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '10px' }}>
           <span>✅</span>
-          <span style={{ fontSize: '14px', color: '#166534' }}>Session booked successfully! Your coach will confirm shortly.</span>
+          <span style={{ fontSize: '14px', color: '#166534' }}>Session booked! Your coach has been notified and will confirm shortly.</span>
         </div>
       )}
 
@@ -56,7 +71,7 @@ export default function VideoCall() {
       <div style={{
         background: '#1C1917',
         borderRadius: '18px',
-        padding: '36px',
+        padding: mobile ? '24px 20px' : '36px',
         marginBottom: '24px',
         position: 'relative',
         overflow: 'hidden',
@@ -64,7 +79,7 @@ export default function VideoCall() {
         <div style={{ position: 'absolute', top: '-40px', right: '-40px', width: '200px', height: '200px', background: 'radial-gradient(circle, rgba(196,168,130,0.1), transparent)', pointerEvents: 'none' }} />
         <div style={{ position: 'relative' }}>
           <div style={{ fontSize: '13px', color: '#7C5C3A', fontWeight: 600, letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '10px' }}>Ready to connect?</div>
-          <h2 style={{ fontSize: '26px', fontWeight: 800, color: '#1A1410', marginBottom: '10px' }}>Book Your Next Session</h2>
+          <h2 style={{ fontSize: mobile ? '22px' : '26px', fontWeight: 800, color: '#F7F3EE', marginBottom: '10px' }}>Book Your Next Session</h2>
           <p style={{ fontSize: '14px', color: '#6B5E54', marginBottom: '24px', maxWidth: '480px' }}>
             Schedule a 1-on-1 video call with your coach. Weekly check-ins, nutrition reviews, program planning — whatever you need to keep progressing.
           </p>
@@ -79,10 +94,10 @@ export default function VideoCall() {
       </div>
 
       {/* Info cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '14px', marginBottom: '24px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : 'repeat(3, 1fr)', gap: '14px', marginBottom: '24px' }}>
         {[
           { icon: '📅', label: 'Sessions Available', value: 'Mon–Fri', color: '#7C5C3A' },
-          { icon: '⏱️', label: 'Session Length', value: '45–60 min', color: '#3b82f6' },
+          { icon: '⏱️', label: 'Session Length', value: '30–45 min', color: '#3b82f6' },
           { icon: '🔗', label: 'Platform', value: 'Zoom / Google Meet', color: '#22c55e' },
         ].map(item => (
           <div key={item.label} style={{ background: '#FFFFFF', border: '1px solid #EDE8E0', borderRadius: '14px', padding: '18px', display: 'flex', gap: '14px', alignItems: 'center' }}>
@@ -107,15 +122,15 @@ export default function VideoCall() {
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             {upcomingSessions.map(s => (
-              <div key={s.id} style={{ display: 'flex', alignItems: 'center', gap: '16px', background: '#FAFAF8', borderRadius: '12px', padding: '16px', border: '1px solid #EDE8E0' }}>
-                <div style={{ width: '48px', height: '48px', background: 'rgba(196,168,130,0.15)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '22px', flexShrink: 0 }}>📹</div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: '15px', fontWeight: 600, color: '#1A1410' }}>{s.type}</div>
-                  <div style={{ fontSize: '13px', color: '#6B5E54', marginTop: '2px' }}>{s.date} at {s.time}</div>
-                  {s.notes && <div style={{ fontSize: '12px', color: '#BEB5AE', marginTop: '4px', fontStyle: 'italic' }}>{s.notes}</div>}
+              <div key={s.id} style={{ display: 'flex', alignItems: 'center', gap: '12px', background: '#FAFAF8', borderRadius: '12px', padding: '14px', border: '1px solid #EDE8E0', flexWrap: 'wrap' }}>
+                <div style={{ width: '44px', height: '44px', background: 'rgba(196,168,130,0.15)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px', flexShrink: 0 }}>📹</div>
+                <div style={{ flex: 1, minWidth: '120px' }}>
+                  <div style={{ fontSize: '14px', fontWeight: 600, color: '#1A1410' }}>{s.type}</div>
+                  <div style={{ fontSize: '12px', color: '#6B5E54', marginTop: '2px' }}>{s.date} at {s.time}</div>
+                  {s.notes && <div style={{ fontSize: '11px', color: '#BEB5AE', marginTop: '3px', fontStyle: 'italic' }}>{s.notes}</div>}
                 </div>
-                <div style={{ display: 'flex', gap: '8px' }}>
-                  <div style={{ background: 'rgba(196,168,130,0.15)', color: '#7C5C3A', fontSize: '11px', fontWeight: 700, padding: '4px 10px', borderRadius: '99px', letterSpacing: '0.5px' }}>SCHEDULED</div>
+                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                  <div style={{ background: 'rgba(196,168,130,0.15)', color: '#7C5C3A', fontSize: '11px', fontWeight: 700, padding: '4px 10px', borderRadius: '99px' }}>SCHEDULED</div>
                   <button onClick={() => cancelSession(s.id)} style={{ background: 'transparent', border: 'none', color: '#BEB5AE', cursor: 'pointer', fontSize: '18px' }}>×</button>
                 </div>
               </div>
@@ -126,9 +141,9 @@ export default function VideoCall() {
 
       {/* Booking modal */}
       {booking && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(28,25,23,0.65)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100 }}
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(28,25,23,0.65)', display: 'flex', alignItems: mobile ? 'flex-end' : 'center', justifyContent: 'center', zIndex: 100 }}
           onClick={() => setBooking(false)}>
-          <div onClick={e => e.stopPropagation()} style={{ background: '#FFFFFF', border: '1px solid #D8D0C5', borderRadius: '18px', padding: '32px', width: '440px' }}>
+          <div onClick={e => e.stopPropagation()} style={{ background: '#FFFFFF', border: '1px solid #D8D0C5', borderRadius: mobile ? '18px 18px 0 0' : '18px', padding: '32px', width: mobile ? '100%' : '440px', maxHeight: '90vh', overflowY: 'auto' }}>
             <h3 style={{ fontSize: '20px', fontWeight: 800, color: '#1A1410', marginBottom: '24px' }}>Book a Session</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <label style={lbl}>
@@ -175,7 +190,7 @@ export default function VideoCall() {
 }
 
 const lbl = { fontSize: '11px', color: '#9C8E84', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'flex', flexDirection: 'column', gap: '6px' }
-const inp = { background: '#FAFAF8', border: '1px solid #1e1e2e', borderRadius: '8px', padding: '10px 14px', color: '#1A1410', fontSize: '14px', outline: 'none' }
+const inp = { background: '#FAFAF8', border: '1px solid #E0D8CE', borderRadius: '8px', padding: '10px 14px', color: '#1A1410', fontSize: '14px', outline: 'none' }
 
 function PageHeader({ icon, title, sub }) {
   return (

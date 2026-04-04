@@ -14,7 +14,7 @@ const sampleReplies = [
   "I've noted this down. Make sure to also log how you're feeling in your daily goals!",
 ]
 
-export default function QA() {
+export default function QA({ mobile }) {
   const [questions, setQuestions] = useState(loadQuestions)
   const [form, setForm] = useState({ category: 'General', subject: '', message: '', urgent: false })
   const [sent, setSent] = useState(false)
@@ -49,7 +49,7 @@ export default function QA() {
   const filtered = filter === 'All' ? questions : questions.filter(q => q.status === filter)
 
   return (
-    <div style={{ padding: '40px', minHeight: '100vh', background: '#F7F3EE' }}>
+    <div style={{ padding: mobile ? '16px 14px 20px' : '40px', minHeight: '100vh', background: '#F7F3EE' }}>
       <PageHeader icon="💬" title="Ask Your Coach" sub="Leave questions, concerns, or updates — your coach will respond" />
 
       {sent && (

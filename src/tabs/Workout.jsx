@@ -13,7 +13,7 @@ const WORKOUT_TYPES = [
 
 const DURATIONS = ['30 min', '45 min', '60 min', '75 min', '90 min', '2+ hrs']
 
-export default function Workout() {
+export default function Workout({ mobile }) {
   const [log, setLog] = useState(() => {
     try { return JSON.parse(localStorage.getItem(TODAY_KEY()) || 'null') || {} }
     catch { return {} }
@@ -29,7 +29,7 @@ export default function Workout() {
   const isLogged = isRestDay || (log.type && log.duration)
 
   return (
-    <div style={{ padding: '40px', minHeight: '100vh', background: '#F7F3EE' }}>
+    <div style={{ padding: mobile ? '16px 14px 20px' : '40px', minHeight: '100vh', background: '#F7F3EE' }}>
       <PageHeader icon="💪" title="Workout Log" sub="Log today's session" />
 
       {/* Rest day toggle */}

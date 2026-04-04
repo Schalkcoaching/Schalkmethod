@@ -80,6 +80,24 @@ const FOOD_LIBRARY = [
   { id: 'cheese_hard',   name: 'Hard Cheese',         category: 'Eggs & Dairy', icon: '🧀', caloriesPer100: 392, unit: 'g',  defaultAmount: 50,  nutrients: { vit_a: 0.4, vit_b2: 0.5, vit_b12: 0.5, vit_k2: 0.9, calcium: 0.9, phosphorus: 0.6, selenium: 0.4 } },
   { id: 'butter',        name: 'Butter',              category: 'Eggs & Dairy', icon: '🧈', caloriesPer100: 717, unit: 'g',  defaultAmount: 20,  nutrients: { vit_a: 0.5, vit_d: 0.3, vit_k2: 0.6, vit_e: 0.3 } },
   { id: 'heavy_cream',   name: 'Heavy Cream',         category: 'Eggs & Dairy', icon: '🥛', caloriesPer100: 345, unit: 'ml', defaultAmount: 50,  nutrients: { vit_a: 0.4, vit_d: 0.3, vit_k2: 0.4, calcium: 0.4 } },
+  // ── Vegetables ──
+  { id: 'spinach',       name: 'Spinach',             category: 'Vegetables', icon: '🥬', caloriesPer100: 23,  unit: 'g', defaultAmount: 100, nutrients: { vit_k2: 0.8, vit_b9: 0.7, vit_a: 0.5, vit_e: 0.4, magnesium: 0.5, iron: 0.4, potassium: 0.5, manganese: 0.6 } },
+  { id: 'broccoli',      name: 'Broccoli',            category: 'Vegetables', icon: '🥦', caloriesPer100: 34,  unit: 'g', defaultAmount: 150, nutrients: { vit_c: 0.9, vit_k2: 0.7, vit_b9: 0.5, vit_e: 0.3, potassium: 0.4, manganese: 0.4 } },
+  { id: 'sweet_potato',  name: 'Sweet Potato',        category: 'Vegetables', icon: '🍠', caloriesPer100: 86,  unit: 'g', defaultAmount: 150, nutrients: { vit_a: 0.9, vit_c: 0.5, vit_b6: 0.4, potassium: 0.6, manganese: 0.5, boron: 0.4 } },
+  { id: 'carrots',       name: 'Carrots',             category: 'Vegetables', icon: '🥕', caloriesPer100: 41,  unit: 'g', defaultAmount: 100, nutrients: { vit_a: 0.8, vit_k2: 0.4, vit_c: 0.3, potassium: 0.4, manganese: 0.3 } },
+  { id: 'bell_pepper',   name: 'Bell Pepper',         category: 'Vegetables', icon: '🫑', caloriesPer100: 31,  unit: 'g', defaultAmount: 120, nutrients: { vit_c: 1.0, vit_b6: 0.4, vit_b9: 0.3, vit_a: 0.3, vit_e: 0.3 } },
+  { id: 'avocado',       name: 'Avocado',             category: 'Vegetables', icon: '🥑', caloriesPer100: 160, unit: 'g', defaultAmount: 100, nutrients: { vit_k2: 0.5, vit_b5: 0.6, vit_b6: 0.5, vit_b9: 0.5, vit_e: 0.6, potassium: 0.7, copper: 0.4 } },
+  { id: 'garlic',        name: 'Garlic',              category: 'Vegetables', icon: '🧄', caloriesPer100: 149, unit: 'g', defaultAmount: 20,  nutrients: { vit_b6: 0.6, vit_c: 0.5, manganese: 0.5, selenium: 0.4 } },
+  { id: 'kale',          name: 'Kale',                category: 'Vegetables', icon: '🥬', caloriesPer100: 49,  unit: 'g', defaultAmount: 100, nutrients: { vit_k2: 0.9, vit_a: 0.6, vit_c: 0.8, vit_b9: 0.4, calcium: 0.4, manganese: 0.5, copper: 0.3 } },
+  { id: 'mushrooms',     name: 'Mushrooms',           category: 'Vegetables', icon: '🍄', caloriesPer100: 22,  unit: 'g', defaultAmount: 100, nutrients: { vit_b2: 0.5, vit_b3: 0.4, vit_b5: 0.5, vit_d: 0.3, selenium: 0.5, copper: 0.5, phosphorus: 0.4 } },
+  // ── Fruits ──
+  { id: 'blueberries',   name: 'Blueberries',         category: 'Fruits', icon: '🫐', caloriesPer100: 57,  unit: 'g', defaultAmount: 100, nutrients: { vit_c: 0.5, vit_k2: 0.5, vit_e: 0.3, manganese: 0.8 } },
+  { id: 'banana',        name: 'Banana',              category: 'Fruits', icon: '🍌', caloriesPer100: 89,  unit: 'g', defaultAmount: 120, nutrients: { vit_b6: 0.6, vit_c: 0.4, potassium: 0.8, magnesium: 0.4, manganese: 0.4 } },
+  { id: 'orange',        name: 'Orange',              category: 'Fruits', icon: '🍊', caloriesPer100: 47,  unit: 'g', defaultAmount: 130, nutrients: { vit_c: 0.9, vit_b9: 0.4, potassium: 0.4, calcium: 0.3 } },
+  { id: 'apple',         name: 'Apple',               category: 'Fruits', icon: '🍎', caloriesPer100: 52,  unit: 'g', defaultAmount: 180, nutrients: { vit_c: 0.3, potassium: 0.3, boron: 0.5 } },
+  { id: 'kiwi',          name: 'Kiwi',                category: 'Fruits', icon: '🥝', caloriesPer100: 61,  unit: 'g', defaultAmount: 100, nutrients: { vit_c: 1.0, vit_k2: 0.5, vit_e: 0.4, potassium: 0.5, copper: 0.3 } },
+  { id: 'mango',         name: 'Mango',               category: 'Fruits', icon: '🥭', caloriesPer100: 60,  unit: 'g', defaultAmount: 150, nutrients: { vit_a: 0.5, vit_c: 0.7, vit_b6: 0.3, vit_b9: 0.4, potassium: 0.4 } },
+  { id: 'strawberries',  name: 'Strawberries',        category: 'Fruits', icon: '🍓', caloriesPer100: 32,  unit: 'g', defaultAmount: 150, nutrients: { vit_c: 0.9, vit_b9: 0.3, manganese: 0.5, potassium: 0.3 } },
 ]
 
 const FOOD_BY_CATEGORY = FOOD_LIBRARY.reduce((acc, f) => {
@@ -120,7 +138,7 @@ function totalCalories(meals) {
   }, 0))
 }
 
-export default function Nutrition() {
+export default function Nutrition({ mobile }) {
   const [data, setData] = useState(() => {
     try { return JSON.parse(localStorage.getItem(todayKey()) || 'null') || emptyDay() }
     catch { return emptyDay() }
@@ -173,11 +191,11 @@ export default function Nutrition() {
   const overallScore = Math.round((vitaminScore + mineralScore) / 2)
 
   return (
-    <div style={{ padding: '40px', minHeight: '100vh', background: '#F7F3EE' }}>
+    <div style={{ padding: mobile ? '16px 14px 20px' : '40px', minHeight: '100vh', background: '#F7F3EE' }}>
       <PageHeader icon="🥩" title="Nutrition Tracker" sub="Log your food and track micronutrient coverage" />
 
       {/* Overview row */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '14px', marginBottom: '20px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : '1fr 1fr 1fr', gap: '14px', marginBottom: '20px' }}>
         <div style={{ background: '#FFFFFF', border: '1px solid #EDE8E0', borderRadius: '14px', padding: '20px', display: 'flex', alignItems: 'center', gap: '16px' }}>
           <MiniRing pct={overallScore} color="#C4A882" size={60} />
           <div>
@@ -224,6 +242,7 @@ export default function Nutrition() {
           setExpandedNutrient={setExpandedNutrient}
           nutrientStatus={nutrientStatus}
           onClose={() => setPanel(null)}
+          mobile={mobile}
         />
       )}
 
@@ -309,7 +328,7 @@ export default function Nutrition() {
                         })}
                       </div>
                     )}
-                    <FoodPicker selectedIds={new Set(foods.map(f => f.id))} onAdd={fid => addFood(slot, fid)} />
+                    <FoodPicker selectedIds={new Set(foods.map(f => f.id))} onAdd={fid => addFood(slot, fid)} mobile={mobile} />
                   </div>
                 )}
               </div>
@@ -414,7 +433,7 @@ function NutrientPanel({ nutrients, scores, loggedFoodIds, expandedNutrient, set
 }
 
 // ─── Food Picker ──────────────────────────────────────────────────────────────
-function FoodPicker({ selectedIds, onAdd }) {
+function FoodPicker({ selectedIds, onAdd, mobile }) {
   const [search, setSearch] = useState('')
   const [activeCategory, setActiveCategory] = useState('All')
 
@@ -438,7 +457,7 @@ function FoodPicker({ selectedIds, onAdd }) {
           </button>
         ))}
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(155px, 1fr))', gap: '8px', maxHeight: '280px', overflowY: 'auto', paddingRight: '4px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: mobile ? 'repeat(2, 1fr)' : 'repeat(auto-fill, minmax(155px, 1fr))', gap: '8px', maxHeight: '280px', overflowY: 'auto', paddingRight: '4px' }}>
         {filtered.map(food => {
           const selected = selectedIds.has(food.id)
           return (
