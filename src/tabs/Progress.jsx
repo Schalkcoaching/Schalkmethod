@@ -1,19 +1,20 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
 
-async function uploadPhoto(dataUrl, path) {
-  try {
-    const res = await fetch(dataUrl)
-    const blob = await res.blob()
-    const { error } = await supabase.storage
-      .from('progress-photos')
-      .upload(path, blob, { contentType: blob.type, upsert: true })
-    if (error) return dataUrl
-    const { data } = supabase.storage.from('progress-photos').getPublicUrl(path)
-    return data.publicUrl
-  } catch {
-    return dataUrl
-  }
+// Resize image to max 800px wide before saving to keep DB size small
+async function resizeImage(dataUrl, maxWidth = 800) {
+  return new Promise((resolve) => {
+    const img = new Image()
+    img.onload = () => {
+      const scale = Math.min(1, maxWidth / img.width)
+      const canvas = document.createElement('canvas')
+      canvas.width  = Math.round(img.width  * scale)
+      canvas.height = Math.round(img.height * scale)
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height)
+      resolve(canvas.toDataURL('image/jpeg', 0.75))
+    }
+    img.src = dataUrl
+  })
 }
 
 function daysBetween(dateA, dateB) {
@@ -71,10 +72,9 @@ export default function Progress({ user, mobile }) {
     const dateLabel = new Date().toLocaleDateString('en-ZA', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })
 
     if (user) {
-      const ts = Date.now()
-      let front_url = null, side_url = null
-      if (frontPreview) front_url = await uploadPhoto(frontPreview, `${user.id}/front_${ts}.jpg`)
-      if (sidePreview)  side_url  = await uploadPhoto(sidePreview,  `${user.id}/side_${ts}.jpg`)
+      // Resize before saving to keep row size small (~50-100KB per photo)
+      const front_url = frontPreview ? await resizeImage(frontPreview) : null
+      const side_url  = sidePreview  ? await resizeImage(sidePreview)  : null
 
       const { data, error } = await supabase.from('progress_photos').insert({
         user_id: user.id,
@@ -85,6 +85,7 @@ export default function Progress({ user, mobile }) {
         note: note || null,
       }).select().single()
 
+      if (error) console.error('Photo save failed:', error.message)
       if (!error && data) setPhotos(prev => [data, ...prev])
     } else {
       const entry = { id: Date.now(), date: dateLabel, created_at: new Date().toISOString(), frontPhoto: frontPreview, sidePhoto: sidePreview, note, weight }
