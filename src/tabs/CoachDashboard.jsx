@@ -67,19 +67,21 @@ export default function CoachDashboard({ coach, mobile }) {
   }
 
   const confirmSession = async (id) => {
-    await supabase.from('sessions').update({
+    const { error } = await supabase.from('sessions').update({
       status: 'Confirmed',
       confirmed_at: new Date().toISOString(),
     }).eq('id', id)
+    if (error) { console.error('Confirm failed:', error.message, error); return }
     setPendingSessions(prev => prev.filter(s => s.id !== id))
   }
 
   const rescheduleSession = async (id, message) => {
     if (!message?.trim()) return
-    await supabase.from('sessions').update({
+    const { error } = await supabase.from('sessions').update({
       status: 'Rescheduled',
       coach_message: message.trim(),
     }).eq('id', id)
+    if (error) { console.error('Reschedule failed:', error.message, error); return }
     setPendingSessions(prev => prev.filter(s => s.id !== id))
   }
 
