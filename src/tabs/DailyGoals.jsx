@@ -59,7 +59,6 @@ export default function DailyGoals({ user, mobile }) {
           checked_ids: checked,
           total: goals.length,
           completed,
-          updated_at: new Date().toISOString(),
         }, { onConflict: 'user_id,date' })
       } else {
         localStorage.setItem(`coachpro_goals_${new Date().toDateString()}`, JSON.stringify(checked))
