@@ -9,12 +9,14 @@ import VideoCall from './tabs/VideoCall'
 import Workout from './tabs/Workout'
 import QA from './tabs/QA'
 import CoachDashboard from './tabs/CoachDashboard'
+import Recipes from './tabs/Recipes'
 
 const clientTabs = [
   { id: 'home',      label: 'Home',        icon: '🏠' },
   { id: 'progress',  label: 'Progress',    icon: '📸' },
   { id: 'goals',     label: 'Goals',       icon: '✅' },
   { id: 'nutrition', label: 'Nutrition',   icon: '🥗' },
+  { id: 'recipes',   label: 'Recipes',     icon: '👨‍🍳' },
   { id: 'workout',   label: 'Workout',     icon: '💪' },
   { id: 'video',     label: 'Sessions',    icon: '📹' },
   { id: 'qa',        label: 'Ask Coach',   icon: '💬' },
@@ -82,6 +84,7 @@ function App() {
       case 'progress':  return <Progress user={user} mobile={isMobile} />
       case 'goals':     return <DailyGoals user={user} mobile={isMobile} />
       case 'nutrition': return <Nutrition user={user} mobile={isMobile} />
+      case 'recipes':   return <Recipes user={user} mobile={isMobile} />
       case 'video':     return <VideoCall user={user} mobile={isMobile} />
       case 'workout':   return <Workout user={user} mobile={isMobile} />
       case 'qa':        return <QA user={user} mobile={isMobile} />
