@@ -43,8 +43,9 @@ export default function CoachDashboard({ coach, mobile }) {
   const [customUrl, setCustomUrl] = useState(() => localStorage.getItem('tsm_app_url') || '')
   const [editingUrl, setEditingUrl] = useState(false)
   const [pendingSessions, setPendingSessions] = useState([])
+  const [weekSessions, setWeekSessions] = useState([])
 
-  useEffect(() => { fetchClients(); fetchPendingSessions() }, [])
+  useEffect(() => { fetchClients(); fetchPendingSessions(); fetchWeekSessions() }, [])
 
   const fetchClients = async () => {
     setLoading(true)
@@ -66,6 +67,21 @@ export default function CoachDashboard({ coach, mobile }) {
     setPendingSessions(data || [])
   }
 
+  const fetchWeekSessions = async () => {
+    const today = todayLocal()
+    const d = new Date(today + 'T12:00:00')
+    d.setDate(d.getDate() + 7)
+    const weekEnd = d.toISOString().slice(0, 10)
+    const { data } = await supabase
+      .from('sessions')
+      .select('*, profiles(email, full_name)')
+      .eq('status', 'Confirmed')
+      .gte('date', today)
+      .lte('date', weekEnd)
+      .order('date', { ascending: true })
+    setWeekSessions(data || [])
+  }
+
   const confirmSession = async (id) => {
     const { error } = await supabase.from('sessions').update({
       status: 'Confirmed',
@@ -73,6 +89,7 @@ export default function CoachDashboard({ coach, mobile }) {
     }).eq('id', id)
     if (error) { console.error('Confirm failed:', error.message, error); return }
     setPendingSessions(prev => prev.filter(s => s.id !== id))
+    fetchWeekSessions()
   }
 
   const rescheduleSession = async (id, message) => {
@@ -120,6 +137,43 @@ export default function CoachDashboard({ coach, mobile }) {
           </div>
         </div>
       )}
+
+      {/* This week's schedule */}
+      <div style={{ background: '#FFFFFF', border: '1px solid #EDE8E0', borderRadius: '16px', padding: '20px', marginBottom: '24px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
+          <span style={{ fontSize: '22px' }}>📅</span>
+          <h3 style={{ fontSize: '15px', fontWeight: 700, color: '#1A1410' }}>This Week's Sessions</h3>
+          <div style={{ marginLeft: 'auto', fontSize: '11px', color: '#9C8E84', fontWeight: 600 }}>{weekSessions.length} confirmed</div>
+        </div>
+        {weekSessions.length === 0 ? (
+          <div style={{ padding: '20px', textAlign: 'center', color: '#BEB5AE', fontSize: '13px' }}>No confirmed sessions this week.</div>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            {weekSessions.map(s => {
+              const isToday = s.date === todayLocal()
+              const clientName = s.profiles?.full_name || s.profiles?.email || 'Client'
+              return (
+                <div key={s.id} style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '12px 14px', background: isToday ? '#F0FAF4' : '#FAFAF8', borderRadius: '12px', border: `1px solid ${isToday ? '#BBF7D0' : '#EDE8E0'}` }}>
+                  <div style={{ width: '48px', textAlign: 'center', flexShrink: 0 }}>
+                    <div style={{ fontSize: '10px', fontWeight: 700, color: isToday ? '#15803D' : '#9C8E84', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                      {isToday ? 'TODAY' : new Date(s.date + 'T12:00:00').toLocaleDateString('en-ZA', { weekday: 'short' }).toUpperCase()}
+                    </div>
+                    <div style={{ fontSize: '18px', fontWeight: 800, color: isToday ? '#15803D' : '#1A1410', lineHeight: 1.2 }}>
+                      {new Date(s.date + 'T12:00:00').getDate()}
+                    </div>
+                  </div>
+                  <div style={{ width: '1px', height: '36px', background: isToday ? '#BBF7D0' : '#EDE8E0', flexShrink: 0 }} />
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: '14px', fontWeight: 600, color: '#1A1410', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{clientName}</div>
+                    <div style={{ fontSize: '12px', color: '#6B5E54', marginTop: '1px' }}>{s.type} · {s.time}</div>
+                  </div>
+                  <div style={{ fontSize: '11px', fontWeight: 700, color: '#15803D', background: '#DCFCE7', padding: '3px 10px', borderRadius: '99px', flexShrink: 0 }}>✓ Confirmed</div>
+                </div>
+              )
+            })}
+          </div>
+        )}
+      </div>
 
       {/* Invite link */}
       <div style={{ background: '#1C1917', borderRadius: '16px', padding: mobile ? '20px' : '28px', marginBottom: '24px' }}>
