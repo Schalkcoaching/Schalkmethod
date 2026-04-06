@@ -8,12 +8,24 @@ async function uploadPhoto(dataUrl, path) {
     const { error } = await supabase.storage
       .from('progress-photos')
       .upload(path, blob, { contentType: blob.type, upsert: true })
-    if (error) return dataUrl // fallback: keep base64
+    if (error) return dataUrl
     const { data } = supabase.storage.from('progress-photos').getPublicUrl(path)
     return data.publicUrl
   } catch {
-    return dataUrl // fallback
+    return dataUrl
   }
+}
+
+function daysBetween(dateA, dateB) {
+  return Math.floor((new Date(dateA) - new Date(dateB)) / 86400000)
+}
+function addDays(dateStr, n) {
+  const d = new Date(dateStr)
+  d.setDate(d.getDate() + n)
+  return d
+}
+function fmtDate(iso) {
+  return new Date(iso).toLocaleDateString('en-ZA', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
 }
 
 export default function Progress({ user, mobile }) {
@@ -25,19 +37,19 @@ export default function Progress({ user, mobile }) {
   const [frontPreview, setFrontPreview] = useState(null)
   const [sidePreview, setSidePreview] = useState(null)
   const [selected, setSelected] = useState(null)
+  const [view, setView] = useState('upload') // 'upload' | 'history'
 
   useEffect(() => { loadPhotos() }, [user])
 
   const loadPhotos = async () => {
     setLoading(true)
     if (user) {
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from('progress_photos')
         .select('*')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false })
-        .limit(20)
-      setPhotos(data || [])
+      if (!error) setPhotos(data || [])
     } else {
       try { setPhotos(JSON.parse(localStorage.getItem('coachpro_progress_v2') || '[]')) }
       catch { setPhotos([]) }
@@ -56,8 +68,7 @@ export default function Progress({ user, mobile }) {
   const handleSave = async () => {
     if (!frontPreview && !sidePreview) return
     setSaving(true)
-
-    const dateLabel = new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
+    const dateLabel = new Date().toLocaleDateString('en-ZA', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })
 
     if (user) {
       const ts = Date.now()
@@ -76,8 +87,7 @@ export default function Progress({ user, mobile }) {
 
       if (!error && data) setPhotos(prev => [data, ...prev])
     } else {
-      // localStorage fallback
-      const entry = { id: Date.now(), date: dateLabel, frontPhoto: frontPreview, sidePhoto: sidePreview, note, weight }
+      const entry = { id: Date.now(), date: dateLabel, created_at: new Date().toISOString(), frontPhoto: frontPreview, sidePhoto: sidePreview, note, weight }
       const updated = [entry, ...photos]
       setPhotos(updated)
       localStorage.setItem('coachpro_progress_v2', JSON.stringify(updated))
@@ -85,11 +95,21 @@ export default function Progress({ user, mobile }) {
 
     setFrontPreview(null); setSidePreview(null); setNote(''); setWeight('')
     setSaving(false)
+    setView('history')
   }
 
   const p = mobile ? '16px 14px 20px' : '40px'
 
-  // Normalise: DB rows use front_url/side_url, old localStorage uses frontPhoto/sidePhoto
+  // Weekly lock logic
+  const lastPhoto = photos[0]
+  const daysSinceLast = lastPhoto?.created_at
+    ? Math.floor((Date.now() - new Date(lastPhoto.created_at).getTime()) / 86400000)
+    : null
+  const isLocked = daysSinceLast !== null && daysSinceLast < 7
+  const nextDate = lastPhoto?.created_at ? addDays(lastPhoto.created_at, 7) : null
+  const daysLeft = isLocked ? 7 - daysSinceLast : 0
+
+  // Normalise photo fields (DB vs localStorage fallback)
   const norm = (ph) => ({
     ...ph,
     frontPhoto: ph.front_url || ph.frontPhoto || null,
@@ -98,92 +118,161 @@ export default function Progress({ user, mobile }) {
 
   return (
     <div style={{ padding: p, minHeight: '100vh', background: '#F7F3EE' }}>
-      <PageHeader icon="📸" title="Physique Progress" sub="Upload a front & side photo each week to track your transformation" />
+      <PageHeader icon="📸" title="Physique Progress" sub="Track your transformation week by week" />
 
-      {/* Upload card */}
-      <div style={card}>
-        <h3 style={cardTitle}>Add This Week's Photos</h3>
-        <div style={{ display: 'flex', gap: mobile ? '12px' : '20px', marginBottom: '20px', flexWrap: 'wrap' }}>
-          <PhotoUploadSlot label="Front View" preview={frontPreview} onChange={handleFile(setFrontPreview)} mobile={mobile} />
-          <PhotoUploadSlot label="Side View"  preview={sidePreview}  onChange={handleFile(setSidePreview)}  mobile={mobile} />
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-          <label style={labelStyle}>
-            Current Weight (optional)
-            <input type="text" placeholder="e.g. 82kg" value={weight} onChange={e => setWeight(e.target.value)} style={inputStyle} />
-          </label>
-          <label style={labelStyle}>
-            Notes / How are you feeling?
-            <textarea placeholder="How are you feeling this week? Any changes noticed?" value={note} onChange={e => setNote(e.target.value)} rows={3} style={{ ...inputStyle, resize: 'vertical' }} />
-          </label>
-          <button onClick={handleSave} disabled={(!frontPreview && !sidePreview) || saving} style={{
-            ...btnPrimary,
-            opacity: (frontPreview || sidePreview) && !saving ? 1 : 0.4,
-            cursor: (frontPreview || sidePreview) && !saving ? 'pointer' : 'not-allowed',
-            alignSelf: 'flex-start',
-          }}>
-            {saving ? 'Uploading...' : 'Save Progress Photos'}
+      {/* Tab toggle */}
+      <div style={{ display: 'flex', gap: '6px', background: '#FFFFFF', border: '1px solid #EDE8E0', borderRadius: '12px', padding: '5px', marginBottom: '20px' }}>
+        {[['upload', '📤 This Week'], ['history', `🗂️ History (${photos.length})`]].map(([v, label]) => (
+          <button key={v} onClick={() => setView(v)} style={{ flex: 1, padding: '10px', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '13px', fontWeight: view === v ? 700 : 500, background: view === v ? '#1C1917' : 'transparent', color: view === v ? '#F7F3EE' : '#9C8E84', transition: 'all 0.15s', touchAction: 'manipulation' }}>
+            {label}
           </button>
-        </div>
+        ))}
       </div>
 
-      {/* Gallery */}
-      {loading ? (
-        <div style={{ textAlign: 'center', padding: '40px', color: '#BEB5AE', fontSize: '14px' }}>Loading photos…</div>
-      ) : photos.length > 0 ? (
-        <div style={card}>
-          <h3 style={cardTitle}>Progress Gallery ({photos.length} entries)</h3>
+      {/* ── Upload / This Week view ── */}
+      {view === 'upload' && (
+        isLocked ? (
+          // Locked state
+          <div style={card}>
+            <div style={{ textAlign: 'center', padding: mobile ? '24px 16px' : '36px' }}>
+              <div style={{ fontSize: '48px', marginBottom: '16px' }}>🔒</div>
+              <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#1A1410', marginBottom: '10px' }}>Submission Locked</h3>
+              <p style={{ fontSize: '14px', color: '#7C5C3A', marginBottom: '20px', lineHeight: 1.6 }}>
+                You already submitted this week's progress photos.<br />
+                <strong>{daysLeft} day{daysLeft !== 1 ? 's' : ''}</strong> until your next submission.
+              </p>
+              <div style={{ background: '#F7F3EE', borderRadius: '12px', padding: '16px', marginBottom: '20px' }}>
+                <div style={{ fontSize: '11px', color: '#9C8E84', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '4px' }}>Next submission unlocks</div>
+                <div style={{ fontSize: '16px', fontWeight: 700, color: '#1C1917' }}>{nextDate ? fmtDate(nextDate) : '—'}</div>
+              </div>
+              {/* Show last submission preview */}
+              {lastPhoto && (
+                <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+                  {norm(lastPhoto).frontPhoto && (
+                    <div style={{ position: 'relative', flex: 1, maxWidth: '180px' }}>
+                      <img src={norm(lastPhoto).frontPhoto} alt="front" style={{ width: '100%', height: '200px', objectFit: 'cover', borderRadius: '12px', opacity: 0.85 }} />
+                      <div style={{ position: 'absolute', bottom: '6px', left: '6px', background: 'rgba(28,25,23,0.75)', color: '#F7F3EE', fontSize: '9px', fontWeight: 700, padding: '2px 8px', borderRadius: '99px' }}>FRONT</div>
+                    </div>
+                  )}
+                  {norm(lastPhoto).sidePhoto && (
+                    <div style={{ position: 'relative', flex: 1, maxWidth: '180px' }}>
+                      <img src={norm(lastPhoto).sidePhoto} alt="side" style={{ width: '100%', height: '200px', objectFit: 'cover', borderRadius: '12px', opacity: 0.85 }} />
+                      <div style={{ position: 'absolute', bottom: '6px', left: '6px', background: 'rgba(28,25,23,0.75)', color: '#F7F3EE', fontSize: '9px', fontWeight: 700, padding: '2px 8px', borderRadius: '99px' }}>SIDE</div>
+                    </div>
+                  )}
+                </div>
+              )}
+              <button onClick={() => setView('history')} style={{ marginTop: '18px', background: '#1C1917', border: 'none', borderRadius: '10px', padding: '11px 24px', color: '#F7F3EE', fontSize: '13px', fontWeight: 700, cursor: 'pointer', touchAction: 'manipulation' }}>
+                View All Progress Photos →
+              </button>
+            </div>
+          </div>
+        ) : (
+          // Upload form (unlocked)
+          <div style={card}>
+            <h3 style={cardTitle}>Add This Week's Photos</h3>
+            <div style={{ display: 'flex', gap: mobile ? '12px' : '20px', marginBottom: '20px', flexWrap: 'wrap' }}>
+              <PhotoUploadSlot label="Front View" preview={frontPreview} onChange={handleFile(setFrontPreview)} mobile={mobile} />
+              <PhotoUploadSlot label="Side View"  preview={sidePreview}  onChange={handleFile(setSidePreview)}  mobile={mobile} />
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <label style={labelStyle}>
+                Current Weight (optional)
+                <input type="text" placeholder="e.g. 82kg" value={weight} onChange={e => setWeight(e.target.value)} style={inputStyle} />
+              </label>
+              <label style={labelStyle}>
+                Notes / How are you feeling?
+                <textarea placeholder="How are you feeling this week? Any changes noticed?" value={note} onChange={e => setNote(e.target.value)} rows={3} style={{ ...inputStyle, resize: 'vertical' }} />
+              </label>
+              <button onClick={handleSave} disabled={(!frontPreview && !sidePreview) || saving} style={{
+                ...btnPrimary,
+                opacity: (frontPreview || sidePreview) && !saving ? 1 : 0.4,
+                cursor: (frontPreview || sidePreview) && !saving ? 'pointer' : 'not-allowed',
+                alignSelf: 'flex-start',
+                touchAction: 'manipulation',
+              }}>
+                {saving ? 'Uploading...' : 'Save Progress Photos'}
+              </button>
+            </div>
+          </div>
+        )
+      )}
+
+      {/* ── History view ── */}
+      {view === 'history' && (
+        loading ? (
+          <div style={{ textAlign: 'center', padding: '60px 0', color: '#BEB5AE', fontSize: '14px' }}>Loading your progress history…</div>
+        ) : photos.length === 0 ? (
+          <div style={{ ...card, textAlign: 'center', padding: '50px 24px' }}>
+            <div style={{ fontSize: '40px', marginBottom: '14px' }}>📸</div>
+            <div style={{ fontSize: '16px', fontWeight: 700, color: '#1A1410', marginBottom: '8px' }}>No photos yet</div>
+            <div style={{ fontSize: '14px', color: '#9C8E84', marginBottom: '20px' }}>Upload your first progress photos to start tracking your transformation.</div>
+            <button onClick={() => setView('upload')} style={{ ...btnPrimary, touchAction: 'manipulation' }}>Upload Photos →</button>
+          </div>
+        ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            {photos.map(ph => {
-              const p = norm(ph)
+            {photos.map((ph, idx) => {
+              const n = norm(ph)
+              const isFirst = idx === 0
               return (
-                <div key={ph.id} onClick={() => setSelected(p)} style={{ borderRadius: '12px', overflow: 'hidden', cursor: 'pointer', border: '1px solid #EDE8E0', background: '#FFFFFF', boxShadow: '0 1px 3px rgba(0,0,0,0.04)', padding: '14px' }}>
-                  <div style={{ display: 'flex', gap: '12px', marginBottom: '10px' }}>
-                    {p.frontPhoto && (
-                      <div style={{ flex: 1, position: 'relative' }}>
-                        <img src={p.frontPhoto} alt="front" style={{ width: '100%', height: mobile ? '160px' : '200px', objectFit: 'cover', borderRadius: '8px' }} />
-                        <div style={{ position: 'absolute', bottom: '6px', left: '6px', background: 'rgba(28,25,23,0.7)', color: '#F7F3EE', fontSize: '10px', fontWeight: 600, padding: '2px 8px', borderRadius: '99px' }}>FRONT</div>
+                <div key={ph.id} style={{ background: '#FFFFFF', border: `1px solid ${isFirst ? '#C4A882' : '#EDE8E0'}`, borderRadius: '14px', overflow: 'hidden', boxShadow: isFirst ? '0 2px 8px rgba(196,168,130,0.2)' : '0 1px 3px rgba(0,0,0,0.04)' }}>
+                  {/* Header row */}
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', borderBottom: '1px solid #EDE8E0', background: isFirst ? '#FFF9F3' : '#FAFAF8' }}>
+                    <div>
+                      <div style={{ fontSize: '13px', fontWeight: 700, color: '#1A1410' }}>{ph.date}</div>
+                      {ph.weight && <div style={{ fontSize: '11px', color: '#7C5C3A', marginTop: '2px' }}>⚖️ {ph.weight}</div>}
+                    </div>
+                    {isFirst && (
+                      <div style={{ background: '#C4A882', borderRadius: '99px', padding: '3px 10px', fontSize: '10px', fontWeight: 700, color: '#1A1410' }}>LATEST</div>
+                    )}
+                  </div>
+                  {/* Photos */}
+                  <div style={{ display: 'flex', gap: '8px', padding: '12px' }} onClick={() => setSelected(n)}>
+                    {n.frontPhoto && (
+                      <div style={{ flex: 1, position: 'relative', cursor: 'pointer' }}>
+                        <img src={n.frontPhoto} alt="front" style={{ width: '100%', height: mobile ? '160px' : '220px', objectFit: 'cover', borderRadius: '8px' }} />
+                        <div style={{ position: 'absolute', bottom: '6px', left: '6px', background: 'rgba(28,25,23,0.75)', color: '#F7F3EE', fontSize: '10px', fontWeight: 600, padding: '2px 8px', borderRadius: '99px' }}>FRONT</div>
                       </div>
                     )}
-                    {p.sidePhoto && (
-                      <div style={{ flex: 1, position: 'relative' }}>
-                        <img src={p.sidePhoto} alt="side" style={{ width: '100%', height: mobile ? '160px' : '200px', objectFit: 'cover', borderRadius: '8px' }} />
-                        <div style={{ position: 'absolute', bottom: '6px', left: '6px', background: 'rgba(28,25,23,0.7)', color: '#F7F3EE', fontSize: '10px', fontWeight: 600, padding: '2px 8px', borderRadius: '99px' }}>SIDE</div>
+                    {n.sidePhoto && (
+                      <div style={{ flex: 1, position: 'relative', cursor: 'pointer' }}>
+                        <img src={n.sidePhoto} alt="side" style={{ width: '100%', height: mobile ? '160px' : '220px', objectFit: 'cover', borderRadius: '8px' }} />
+                        <div style={{ position: 'absolute', bottom: '6px', left: '6px', background: 'rgba(28,25,23,0.75)', color: '#F7F3EE', fontSize: '10px', fontWeight: 600, padding: '2px 8px', borderRadius: '99px' }}>SIDE</div>
                       </div>
                     )}
                   </div>
-                  <div style={{ fontSize: '12px', color: '#7C5C3A', fontWeight: 600 }}>{ph.date}</div>
-                  {ph.weight && <div style={{ fontSize: '12px', color: '#6B5E54', marginTop: '2px' }}>⚖️ {ph.weight}</div>}
-                  {ph.note && <div style={{ fontSize: '11px', color: '#9C8E84', marginTop: '4px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{ph.note}</div>}
+                  {ph.note && (
+                    <div style={{ padding: '0 14px 12px', fontSize: '12px', color: '#9C8E84', lineHeight: 1.5 }}>"{ph.note}"</div>
+                  )}
                 </div>
               )
             })}
           </div>
-        </div>
-      ) : null}
+        )
+      )}
 
       {/* Full-screen modal */}
       {selected && (
-        <div onClick={() => setSelected(null)} style={{ position: 'fixed', inset: 0, background: 'rgba(28,25,23,0.75)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100 }}>
-          <div onClick={e => e.stopPropagation()} style={{ background: '#FFFFFF', borderRadius: '16px', padding: '24px', maxWidth: '600px', width: '94%', maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 20px 60px rgba(0,0,0,0.25)' }}>
-            <div style={{ display: 'flex', gap: '12px', marginBottom: '16px' }}>
+        <div onClick={() => setSelected(null)} style={{ position: 'fixed', inset: 0, background: 'rgba(28,25,23,0.82)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100, padding: '16px' }}>
+          <div onClick={e => e.stopPropagation()} style={{ background: '#FFFFFF', borderRadius: '16px', padding: '20px', maxWidth: '600px', width: '100%', maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 20px 60px rgba(0,0,0,0.3)' }}>
+            <div style={{ display: 'flex', gap: '12px', marginBottom: '14px' }}>
               {selected.frontPhoto && (
                 <div style={{ flex: 1, position: 'relative' }}>
                   <img src={selected.frontPhoto} alt="front" style={{ width: '100%', borderRadius: '10px' }} />
-                  <div style={{ position: 'absolute', bottom: '8px', left: '8px', background: 'rgba(28,25,23,0.7)', color: '#F7F3EE', fontSize: '11px', fontWeight: 600, padding: '3px 10px', borderRadius: '99px' }}>FRONT</div>
+                  <div style={{ position: 'absolute', bottom: '8px', left: '8px', background: 'rgba(28,25,23,0.75)', color: '#F7F3EE', fontSize: '11px', fontWeight: 600, padding: '3px 10px', borderRadius: '99px' }}>FRONT</div>
                 </div>
               )}
               {selected.sidePhoto && (
                 <div style={{ flex: 1, position: 'relative' }}>
                   <img src={selected.sidePhoto} alt="side" style={{ width: '100%', borderRadius: '10px' }} />
-                  <div style={{ position: 'absolute', bottom: '8px', left: '8px', background: 'rgba(28,25,23,0.7)', color: '#F7F3EE', fontSize: '11px', fontWeight: 600, padding: '3px 10px', borderRadius: '99px' }}>SIDE</div>
+                  <div style={{ position: 'absolute', bottom: '8px', left: '8px', background: 'rgba(28,25,23,0.75)', color: '#F7F3EE', fontSize: '11px', fontWeight: 600, padding: '3px 10px', borderRadius: '99px' }}>SIDE</div>
                 </div>
               )}
             </div>
-            <div style={{ fontSize: '14px', color: '#7C5C3A', fontWeight: 600, marginBottom: '6px' }}>{selected.date}</div>
-            {selected.weight && <div style={{ fontSize: '14px', color: '#4A3E35', marginBottom: '6px' }}>⚖️ {selected.weight}</div>}
-            {selected.note && <div style={{ fontSize: '13px', color: '#6B5E54' }}>{selected.note}</div>}
-            <button onClick={() => setSelected(null)} style={{ ...btnSecondary, marginTop: '16px' }}>Close</button>
+            <div style={{ fontSize: '14px', fontWeight: 600, color: '#7C5C3A', marginBottom: '4px' }}>{selected.date}</div>
+            {selected.weight && <div style={{ fontSize: '13px', color: '#4A3E35', marginBottom: '4px' }}>⚖️ {selected.weight}</div>}
+            {selected.note && <div style={{ fontSize: '13px', color: '#6B5E54', lineHeight: 1.5 }}>"{selected.note}"</div>}
+            <button onClick={() => setSelected(null)} style={{ ...btnSecondary, marginTop: '14px', touchAction: 'manipulation' }}>Close</button>
           </div>
         </div>
       )}
@@ -195,7 +284,7 @@ function PhotoUploadSlot({ label, preview, onChange, mobile }) {
   return (
     <div style={{ flex: 1, minWidth: mobile ? '120px' : '150px' }}>
       <div style={{ fontSize: '11px', color: '#9C8E84', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '8px' }}>{label}</div>
-      <label style={{ display: 'block', width: '100%', height: mobile ? '160px' : '200px', border: preview ? 'none' : '2px dashed #D8CFC5', borderRadius: '12px', cursor: 'pointer', background: preview ? 'transparent' : '#F5F0EB', overflow: 'hidden', position: 'relative' }}>
+      <label style={{ display: 'block', width: '100%', height: mobile ? '160px' : '200px', border: preview ? 'none' : '2px dashed #D8CFC5', borderRadius: '12px', cursor: 'pointer', background: preview ? 'transparent' : '#F5F0EB', overflow: 'hidden', position: 'relative', touchAction: 'manipulation' }}>
         <input type="file" accept="image/*" onChange={onChange} style={{ display: 'none' }} />
         {preview
           ? <img src={preview} alt={label} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '12px' }} />
