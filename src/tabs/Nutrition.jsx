@@ -226,7 +226,7 @@ export default function Nutrition({ user, mobile }) {
       return
     }
     setSaving(true)
-    await supabase.from('nutrition_logs').upsert({
+    const { error } = await supabase.from('nutrition_logs').upsert({
       user_id: user.id,
       date,
       meals: dayData.meals,
@@ -234,6 +234,7 @@ export default function Nutrition({ user, mobile }) {
       notes: dayData.notes,
       updated_at: new Date().toISOString(),
     }, { onConflict: 'user_id,date' })
+    if (error) console.error('Nutrition save failed:', error.message, error)
     setSaving(false)
   }
 
