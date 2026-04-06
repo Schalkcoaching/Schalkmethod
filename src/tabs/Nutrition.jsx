@@ -232,7 +232,6 @@ export default function Nutrition({ user, mobile }) {
       meals: dayData.meals,
       water: dayData.water,
       notes: dayData.notes,
-      updated_at: new Date().toISOString(),
     }, { onConflict: 'user_id,date' })
     if (error) console.error('Nutrition save failed:', error.message, error)
     setSaving(false)
