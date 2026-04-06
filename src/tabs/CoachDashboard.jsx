@@ -66,6 +66,23 @@ export default function CoachDashboard({ coach, mobile }) {
     setPendingSessions(data || [])
   }
 
+  const confirmSession = async (id) => {
+    await supabase.from('sessions').update({
+      status: 'Confirmed',
+      confirmed_at: new Date().toISOString(),
+    }).eq('id', id)
+    setPendingSessions(prev => prev.filter(s => s.id !== id))
+  }
+
+  const rescheduleSession = async (id, message) => {
+    if (!message?.trim()) return
+    await supabase.from('sessions').update({
+      status: 'Rescheduled',
+      coach_message: message.trim(),
+    }).eq('id', id)
+    setPendingSessions(prev => prev.filter(s => s.id !== id))
+  }
+
   const saveUrl = () => { localStorage.setItem('tsm_app_url', customUrl); setEditingUrl(false) }
   const copyLink = () => {
     if (!customUrl) return
@@ -88,16 +105,15 @@ export default function CoachDashboard({ coach, mobile }) {
               {pendingSessions.length} Session Request{pendingSessions.length > 1 ? 's' : ''} Pending
             </h3>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
             {pendingSessions.map(s => (
-              <div key={s.id} style={{ background: '#FFFFFF', borderRadius: '10px', padding: '12px 16px', border: '1px solid #FED7AA', display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
-                <span style={{ fontSize: '20px' }}>📹</span>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: '13px', fontWeight: 600, color: '#1A1410' }}>{s.profiles?.full_name || s.profiles?.email || 'Client'}</div>
-                  <div style={{ fontSize: '12px', color: '#92400E', marginTop: '2px' }}>{s.type} · {s.date} at {s.time}</div>
-                </div>
-                <div style={{ fontSize: '11px', background: 'rgba(251,191,36,0.2)', color: '#92400E', fontWeight: 700, padding: '4px 10px', borderRadius: '99px' }}>NEW</div>
-              </div>
+              <SessionCard
+                key={s.id}
+                session={s}
+                onConfirm={() => confirmSession(s.id)}
+                onReschedule={(msg) => rescheduleSession(s.id, msg)}
+                mobile={mobile}
+              />
             ))}
           </div>
         </div>
@@ -167,6 +183,52 @@ export default function CoachDashboard({ coach, mobile }) {
           </div>
         )}
       </div>
+    </div>
+  )
+}
+
+// ─── Session Card (coach actions) ────────────────────────────────────────────
+function SessionCard({ session: s, onConfirm, onReschedule, mobile }) {
+  const [showReschedule, setShowReschedule] = useState(false)
+  const [message, setMessage] = useState('')
+
+  return (
+    <div style={{ background: '#FFFFFF', borderRadius: '12px', border: '1px solid #FED7AA', overflow: 'hidden' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', flexWrap: 'wrap' }}>
+        <span style={{ fontSize: '20px' }}>📹</span>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontSize: '13px', fontWeight: 700, color: '#1A1410' }}>{s.profiles?.full_name || s.profiles?.email || 'Client'}</div>
+          <div style={{ fontSize: '12px', color: '#92400E', marginTop: '2px' }}>{s.type} · {s.date} at {s.time}</div>
+          {s.notes && <div style={{ fontSize: '11px', color: '#9C8E84', marginTop: '2px' }}>"{s.notes}"</div>}
+        </div>
+        <div style={{ display: 'flex', gap: '6px', flexShrink: 0 }}>
+          <button onClick={onConfirm} style={{ background: '#16A34A', border: 'none', borderRadius: '8px', padding: '7px 14px', color: '#FFFFFF', fontSize: '12px', fontWeight: 700, cursor: 'pointer', touchAction: 'manipulation' }}>
+            ✓ Confirm
+          </button>
+          <button onClick={() => setShowReschedule(v => !v)} style={{ background: '#F7F3EE', border: '1px solid #FED7AA', borderRadius: '8px', padding: '7px 14px', color: '#92400E', fontSize: '12px', fontWeight: 600, cursor: 'pointer', touchAction: 'manipulation' }}>
+            ↩ Reschedule
+          </button>
+        </div>
+      </div>
+      {showReschedule && (
+        <div style={{ borderTop: '1px solid #FED7AA', padding: '12px 16px', background: '#FFFBF5' }}>
+          <div style={{ fontSize: '12px', color: '#92400E', marginBottom: '8px', fontWeight: 600 }}>Send a message to the client:</div>
+          <input
+            type="text"
+            placeholder="e.g. Can we move this to Thursday at 10am?"
+            value={message}
+            onChange={e => setMessage(e.target.value)}
+            style={{ width: '100%', background: '#FFFFFF', border: '1px solid #FED7AA', borderRadius: '8px', padding: '9px 12px', color: '#1A1410', fontSize: '13px', outline: 'none', boxSizing: 'border-box', marginBottom: '8px' }}
+          />
+          <button
+            onClick={() => { onReschedule(message); setShowReschedule(false) }}
+            disabled={!message.trim()}
+            style={{ background: message.trim() ? '#D97706' : '#EDE8E0', border: 'none', borderRadius: '8px', padding: '8px 18px', color: message.trim() ? '#FFFFFF' : '#BEB5AE', fontSize: '12px', fontWeight: 700, cursor: message.trim() ? 'pointer' : 'not-allowed', touchAction: 'manipulation' }}
+          >
+            Send Reschedule Request
+          </button>
+        </div>
+      )}
     </div>
   )
 }
