@@ -81,10 +81,14 @@ const FOOD_LIBRARY = [
   { id: 'milk_whole',  name: 'Whole Milk',          category: 'Eggs & Dairy',  icon: '🥛', caloriesPer100: 61,  unit: 'ml', defaultAmount: 250, nutrients: { vit_a: 0.4, vit_b2: 0.6, vit_b12: 0.5, vit_d: 0.4, calcium: 0.8, phosphorus: 0.6, iodine: 0.7, potassium: 0.4 } },
   { id: 'greek_yogurt',name: 'Greek Yogurt',        category: 'Eggs & Dairy',  icon: '🥛', caloriesPer100: 59,  unit: 'g',  defaultAmount: 200, nutrients: { vit_b2: 0.5, vit_b12: 0.6, calcium: 0.7, phosphorus: 0.5, iodine: 0.6, potassium: 0.4 } },
   { id: 'kefir',       name: 'Kefir',               category: 'Eggs & Dairy',  icon: '🥛', caloriesPer100: 52,  unit: 'ml', defaultAmount: 250, nutrients: { vit_b2: 0.4, vit_b12: 0.5, calcium: 0.6, phosphorus: 0.5, potassium: 0.4, iodine: 0.4, vit_k2: 0.3 } },
-  { id: 'cheese_hard', name: 'Hard Cheese',         category: 'Eggs & Dairy',  icon: '🧀', caloriesPer100: 392, unit: 'g',  defaultAmount: 50,  nutrients: { vit_a: 0.4, vit_b2: 0.5, vit_b12: 0.5, vit_k2: 0.9, calcium: 0.9, phosphorus: 0.6, selenium: 0.4 } },
+  { id: 'parmesan',    name: 'Parmesan',            category: 'Eggs & Dairy',  icon: '🧀', caloriesPer100: 431, unit: 'g',  defaultAmount: 30,  nutrients: { vit_a: 0.4, vit_b2: 0.5, vit_b12: 0.6, vit_k2: 0.9, calcium: 1.0, phosphorus: 0.7, selenium: 0.5, zinc: 0.5 } },
+  { id: 'cheddar',     name: 'Cheddar Cheese',      category: 'Eggs & Dairy',  icon: '🧀', caloriesPer100: 403, unit: 'g',  defaultAmount: 40,  nutrients: { vit_a: 0.5, vit_b2: 0.5, vit_b12: 0.5, vit_k2: 0.8, calcium: 0.9, phosphorus: 0.6, selenium: 0.4 } },
+  { id: 'gouda',       name: 'Gouda Cheese',        category: 'Eggs & Dairy',  icon: '🧀', caloriesPer100: 356, unit: 'g',  defaultAmount: 40,  nutrients: { vit_a: 0.4, vit_b2: 0.4, vit_b12: 0.6, vit_k2: 0.9, calcium: 0.8, phosphorus: 0.6, zinc: 0.4 } },
+  { id: 'mozzarella',  name: 'Mozzarella',          category: 'Eggs & Dairy',  icon: '🧀', caloriesPer100: 280, unit: 'g',  defaultAmount: 50,  nutrients: { vit_a: 0.3, vit_b2: 0.4, vit_b12: 0.5, calcium: 0.7, phosphorus: 0.5, selenium: 0.4 } },
   { id: 'butter',      name: 'Butter',              category: 'Eggs & Dairy',  icon: '🧈', caloriesPer100: 717, unit: 'g',  defaultAmount: 20,  nutrients: { vit_a: 0.5, vit_d: 0.3, vit_k2: 0.6, vit_e: 0.3 } },
   { id: 'heavy_cream', name: 'Heavy Cream',         category: 'Eggs & Dairy',  icon: '🥛', caloriesPer100: 345, unit: 'ml', defaultAmount: 50,  nutrients: { vit_a: 0.4, vit_d: 0.3, vit_k2: 0.4, calcium: 0.4 } },
   // ── Nuts & Seeds ──
+  { id: 'brazil_nuts', name: 'Brazil Nuts',         category: 'Nuts & Seeds',  icon: '🌰', caloriesPer100: 656, unit: 'g',  defaultAmount: 30,  nutrients: { selenium: 1.0, magnesium: 0.6, copper: 0.5, phosphorus: 0.5, vit_e: 0.4, zinc: 0.4, manganese: 0.3 } },
   { id: 'almonds',     name: 'Almonds',             category: 'Nuts & Seeds',  icon: '🌰', caloriesPer100: 579, unit: 'g',  defaultAmount: 30,  nutrients: { vit_e: 0.9, vit_b2: 0.3, magnesium: 0.5, manganese: 0.4, copper: 0.3, phosphorus: 0.4, calcium: 0.3 } },
   { id: 'walnuts',     name: 'Walnuts',             category: 'Nuts & Seeds',  icon: '🌰', caloriesPer100: 654, unit: 'g',  defaultAmount: 30,  nutrients: { vit_b6: 0.4, copper: 0.5, manganese: 0.6, magnesium: 0.3, phosphorus: 0.3 } },
   { id: 'cashews',     name: 'Cashews',             category: 'Nuts & Seeds',  icon: '🌰', caloriesPer100: 553, unit: 'g',  defaultAmount: 30,  nutrients: { copper: 0.7, zinc: 0.4, magnesium: 0.5, iron: 0.3, phosphorus: 0.4 } },
@@ -92,14 +96,12 @@ const FOOD_LIBRARY = [
   { id: 'macadamia',   name: 'Macadamia Nuts',      category: 'Nuts & Seeds',  icon: '🌰', caloriesPer100: 718, unit: 'g',  defaultAmount: 30,  nutrients: { manganese: 1.0, vit_b1: 0.5, copper: 0.3 } },
   // ── Vegetables ──
   { id: 'spinach',     name: 'Spinach',             category: 'Vegetables',    icon: '🥬', caloriesPer100: 23,  unit: 'g', defaultAmount: 100, nutrients: { vit_k2: 0.8, vit_b9: 0.7, vit_a: 0.5, vit_e: 0.4, magnesium: 0.5, iron: 0.4, potassium: 0.5, manganese: 0.6 } },
-  { id: 'broccoli',    name: 'Broccoli',            category: 'Vegetables',    icon: '🥦', caloriesPer100: 34,  unit: 'g', defaultAmount: 150, nutrients: { vit_c: 0.9, vit_k2: 0.7, vit_b9: 0.5, vit_e: 0.3, potassium: 0.4, manganese: 0.4 } },
   { id: 'sweet_potato',name: 'Sweet Potato',        category: 'Vegetables',    icon: '🍠', caloriesPer100: 86,  unit: 'g', defaultAmount: 150, nutrients: { vit_a: 0.9, vit_c: 0.5, vit_b6: 0.4, potassium: 0.6, manganese: 0.5, boron: 0.4 } },
   { id: 'carrots',     name: 'Carrots',             category: 'Vegetables',    icon: '🥕', caloriesPer100: 41,  unit: 'g', defaultAmount: 100, nutrients: { vit_a: 0.8, vit_k2: 0.4, vit_c: 0.3, potassium: 0.4, manganese: 0.3 } },
   { id: 'bell_pepper', name: 'Bell Pepper',         category: 'Vegetables',    icon: '🫑', caloriesPer100: 31,  unit: 'g', defaultAmount: 120, nutrients: { vit_c: 1.0, vit_b6: 0.4, vit_b9: 0.3, vit_a: 0.3, vit_e: 0.3 } },
   { id: 'avocado',     name: 'Avocado',             category: 'Vegetables',    icon: '🥑', caloriesPer100: 160, unit: 'g', defaultAmount: 100, nutrients: { vit_k2: 0.5, vit_b5: 0.6, vit_b6: 0.5, vit_b9: 0.5, vit_e: 0.6, potassium: 0.7, copper: 0.4 } },
   { id: 'garlic',      name: 'Garlic',              category: 'Vegetables',    icon: '🧄', caloriesPer100: 149, unit: 'g', defaultAmount: 20,  nutrients: { vit_b6: 0.6, vit_c: 0.5, manganese: 0.5, selenium: 0.4 } },
   { id: 'kale',        name: 'Kale',                category: 'Vegetables',    icon: '🥬', caloriesPer100: 49,  unit: 'g', defaultAmount: 100, nutrients: { vit_k2: 0.9, vit_a: 0.6, vit_c: 0.8, vit_b9: 0.4, calcium: 0.4, manganese: 0.5, copper: 0.3 } },
-  { id: 'mushrooms',   name: 'Mushrooms',           category: 'Vegetables',    icon: '🍄', caloriesPer100: 22,  unit: 'g', defaultAmount: 100, nutrients: { vit_b2: 0.5, vit_b3: 0.4, vit_b5: 0.5, vit_d: 0.3, selenium: 0.5, copper: 0.5, phosphorus: 0.4 } },
   { id: 'sauerkraut',  name: 'Sauerkraut',          category: 'Vegetables',    icon: '🥬', caloriesPer100: 19,  unit: 'g', defaultAmount: 100, nutrients: { vit_c: 0.5, vit_k2: 0.5, vit_b9: 0.2, iron: 0.2, manganese: 0.3 } },
   // ── Fruits ──
   { id: 'blueberries', name: 'Blueberries',         category: 'Fruits',        icon: '🫐', caloriesPer100: 57,  unit: 'g', defaultAmount: 100, nutrients: { vit_c: 0.5, vit_k2: 0.5, vit_e: 0.3, manganese: 0.8 } },
@@ -109,6 +111,17 @@ const FOOD_LIBRARY = [
   { id: 'kiwi',        name: 'Kiwi',                category: 'Fruits',        icon: '🥝', caloriesPer100: 61,  unit: 'g', defaultAmount: 100, nutrients: { vit_c: 1.0, vit_k2: 0.5, vit_e: 0.4, potassium: 0.5, copper: 0.3 } },
   { id: 'mango',       name: 'Mango',               category: 'Fruits',        icon: '🥭', caloriesPer100: 60,  unit: 'g', defaultAmount: 150, nutrients: { vit_a: 0.5, vit_c: 0.7, vit_b6: 0.3, vit_b9: 0.4, potassium: 0.4 } },
   { id: 'strawberries',name: 'Strawberries',        category: 'Fruits',        icon: '🍓', caloriesPer100: 32,  unit: 'g', defaultAmount: 150, nutrients: { vit_c: 0.9, vit_b9: 0.3, manganese: 0.5, potassium: 0.3 } },
+  { id: 'dragonfruit', name: 'Dragon Fruit',        category: 'Fruits',        icon: '🐉', caloriesPer100: 60,  unit: 'g', defaultAmount: 150, nutrients: { vit_c: 0.5, vit_b3: 0.3, iron: 0.3, magnesium: 0.3, phosphorus: 0.3, calcium: 0.3 } },
+  { id: 'white_grapes',name: 'White Grapes',        category: 'Fruits',        icon: '🍇', caloriesPer100: 67,  unit: 'g', defaultAmount: 150, nutrients: { vit_c: 0.4, vit_k2: 0.3, potassium: 0.4, copper: 0.3, manganese: 0.3 } },
+  { id: 'red_grapes',  name: 'Red Grapes',          category: 'Fruits',        icon: '🍇', caloriesPer100: 67,  unit: 'g', defaultAmount: 150, nutrients: { vit_c: 0.4, vit_k2: 0.4, potassium: 0.4, copper: 0.4, manganese: 0.3 } },
+  { id: 'pomegranate', name: 'Pomegranate',         category: 'Fruits',        icon: '🍎', caloriesPer100: 83,  unit: 'g', defaultAmount: 100, nutrients: { vit_c: 0.5, vit_k2: 0.5, vit_b9: 0.4, potassium: 0.5, copper: 0.4, manganese: 0.3 } },
+  { id: 'papaya',      name: 'Papaya',              category: 'Fruits',        icon: '🍈', caloriesPer100: 43,  unit: 'g', defaultAmount: 150, nutrients: { vit_c: 0.9, vit_a: 0.5, vit_b9: 0.4, potassium: 0.4 } },
+  // ── Pantry & Superfoods ──
+  { id: 'raw_honey',   name: 'Raw Honey',           category: 'Pantry',        icon: '🍯', caloriesPer100: 304, unit: 'g', defaultAmount: 20,  nutrients: { manganese: 0.3, copper: 0.2, vit_b2: 0.2, vit_b3: 0.1, potassium: 0.2 } },
+  { id: 'cacao_powder',name: 'Cacao Powder',        category: 'Pantry',        icon: '🍫', caloriesPer100: 228, unit: 'g', defaultAmount: 15,  nutrients: { magnesium: 0.9, iron: 0.7, copper: 0.8, manganese: 0.8, phosphorus: 0.6, zinc: 0.5 } },
+  { id: 'coconut_oil', name: 'Coconut Oil',         category: 'Pantry',        icon: '🥥', caloriesPer100: 862, unit: 'g', defaultAmount: 15,  nutrients: { vit_e: 0.1 } },
+  { id: 'olive_oil',   name: 'Olive Oil',           category: 'Pantry',        icon: '🫒', caloriesPer100: 884, unit: 'ml', defaultAmount: 15,  nutrients: { vit_e: 0.7, vit_k2: 0.5 } },
+  { id: 'apple_cider_vinegar', name: 'Apple Cider Vinegar', category: 'Pantry', icon: '🍶', caloriesPer100: 22, unit: 'ml', defaultAmount: 15, nutrients: { potassium: 0.1 } },
 ]
 
 const FOOD_BY_CATEGORY = FOOD_LIBRARY.reduce((acc, f) => {
