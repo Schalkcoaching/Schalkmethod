@@ -10,6 +10,20 @@ import Workout from './tabs/Workout'
 import QA from './tabs/QA'
 import CoachDashboard from './tabs/CoachDashboard'
 import Recipes from './tabs/Recipes'
+import Paywall from './tabs/Paywall'
+
+function needsPaywall(profile) {
+  if (!profile) return false
+  const status = profile.subscription_status
+  if (!status) return false                          // no column yet — let them in
+  if (status === 'active' || status === 'grandfathered' || status === 'cancelled') return false
+  if (status === 'trial') {
+    const ends = profile.trial_ends_at ? new Date(profile.trial_ends_at) : null
+    if (!ends) return false
+    return new Date() > ends                         // trial expired
+  }
+  return status === 'expired' || status === 'inactive'
+}
 
 const clientTabs = [
   { id: 'home',      label: 'Home',        icon: '🏠' },
@@ -29,22 +43,29 @@ const coachTabs = [
 
 function App() {
   const [user, setUser] = useState(undefined)
+  const [profile, setProfile] = useState(null)
   const [activeTab, setActiveTab] = useState('home')
   const [windowWidth, setWindowWidth] = useState(window.innerWidth)
 
+  const fetchProfile = async (uid) => {
+    const { data } = await supabase.from('profiles').select('*').eq('id', uid).single()
+    setProfile(data || null)
+  }
+
   useEffect(() => {
     supabase.auth.getSession().then(async ({ data: { session } }) => {
-      // If user chose NOT to keep signed in and this is a fresh page load
-      // (sessionStorage cleared = new browser session), sign them out
       if (session && localStorage.getItem('tsm_keep_signed_in') === 'false' && !sessionStorage.getItem('tsm_session_active')) {
         await supabase.auth.signOut()
         setUser(null)
       } else {
         setUser(session?.user ?? null)
+        if (session?.user) fetchProfile(session.user.id)
       }
     })
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null)
+      if (session?.user) fetchProfile(session.user.id)
+      else setProfile(null)
     })
     const handleResize = () => setWindowWidth(window.innerWidth)
     window.addEventListener('resize', handleResize)
@@ -75,6 +96,19 @@ function App() {
   }
 
   const coach = isCoach(user)
+
+  // Show paywall for non-coach users whose trial/subscription has expired
+  if (!coach && needsPaywall(profile)) {
+    return <Paywall user={user} profile={profile} mobile={windowWidth < 768} />
+  }
+
+  // Trial countdown banner state (shown inside app while trial is still active)
+  const trialDaysLeft = (() => {
+    if (!profile?.trial_ends_at || profile?.subscription_status !== 'trial') return null
+    const diff = new Date(profile.trial_ends_at) - new Date()
+    const days = Math.ceil(diff / (1000 * 60 * 60 * 24))
+    return days > 0 ? days : null
+  })()
   const tabs = coach ? coachTabs : clientTabs
   const isMobile = windowWidth < 768
 
@@ -112,6 +146,14 @@ function App() {
             }}>Sign out</button>
           </div>
         </div>
+
+        {/* Trial banner */}
+        {trialDaysLeft && (
+          <div style={{ background: '#FEF3C7', borderBottom: '1px solid #FDE68A', padding: '6px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <span style={{ fontSize: '11px', fontWeight: 600, color: '#92400E' }}>⏳ {trialDaysLeft} day{trialDaysLeft === 1 ? '' : 's'} left on your free trial</span>
+            <a href={`https://schalkmethod.lemonsqueezy.com/buy/APP_VARIANT_UUID?checkout[email]=${encodeURIComponent(user.email)}&checkout[custom][user_id]=${user.id}`} target="_blank" rel="noreferrer" style={{ fontSize: '11px', fontWeight: 700, color: '#92400E', textDecoration: 'underline' }}>Subscribe</a>
+          </div>
+        )}
 
         {/* Main content */}
         <main style={{ flex: 1, overflowY: 'auto', background: '#F7F3EE' }}>
