@@ -151,7 +151,7 @@ function App() {
         {trialDaysLeft && (
           <div style={{ background: '#FEF3C7', borderBottom: '1px solid #FDE68A', padding: '6px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <span style={{ fontSize: '11px', fontWeight: 600, color: '#92400E' }}>⏳ {trialDaysLeft} day{trialDaysLeft === 1 ? '' : 's'} left on your free trial</span>
-            <a href={`https://schalkmethod.lemonsqueezy.com/buy/APP_VARIANT_UUID?checkout[email]=${encodeURIComponent(user.email)}&checkout[custom][user_id]=${user.id}`} target="_blank" rel="noreferrer" style={{ fontSize: '11px', fontWeight: 700, color: '#92400E', textDecoration: 'underline' }}>Subscribe</a>
+            <a href={`https://schalkcoaching.lemonsqueezy.com/checkout/buy/740670e6-c268-4f1f-b454-4757e271e9a8?checkout[email]=${encodeURIComponent(user.email)}&checkout[custom][user_id]=${user.id}`} target="_blank" rel="noreferrer" style={{ fontSize: '11px', fontWeight: 700, color: '#92400E', textDecoration: 'underline' }}>Subscribe</a>
           </div>
         )}
 

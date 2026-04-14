@@ -1,7 +1,7 @@
 // LS variant / buy-link config — update BUY_LINKS once you have the URLs from LS dashboard
 const BUY_LINKS = {
-  app:      'https://schalkmethod.lemonsqueezy.com/buy/APP_VARIANT_UUID',      // ← replace
-  coaching: 'https://schalkmethod.lemonsqueezy.com/buy/COACHING_VARIANT_UUID', // ← replace
+  app:      'https://schalkcoaching.lemonsqueezy.com/checkout/buy/740670e6-c268-4f1f-b454-4757e271e9a8',
+  coaching: 'https://schalkcoaching.lemonsqueezy.com/checkout/buy/c3cf6707-7224-4081-a28d-d11e88cf2ce7',
 }
 
 function daysLeft(trialEndsAt) {
