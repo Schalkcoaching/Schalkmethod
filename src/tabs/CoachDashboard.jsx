@@ -44,8 +44,10 @@ export default function CoachDashboard({ coach, mobile }) {
   const [editingUrl, setEditingUrl] = useState(false)
   const [pendingSessions, setPendingSessions] = useState([])
   const [weekSessions, setWeekSessions] = useState([])
+  const [questions, setQuestions] = useState([])
+  const [replyTexts, setReplyTexts] = useState({})
 
-  useEffect(() => { fetchClients(); fetchPendingSessions(); fetchWeekSessions() }, [])
+  useEffect(() => { fetchClients(); fetchPendingSessions(); fetchWeekSessions(); fetchQuestions() }, [])
 
   const fetchClients = async () => {
     setLoading(true)
@@ -100,6 +102,26 @@ export default function CoachDashboard({ coach, mobile }) {
     }).eq('id', id)
     if (error) { console.error('Reschedule failed:', error.message, error); return }
     setPendingSessions(prev => prev.filter(s => s.id !== id))
+  }
+
+  const fetchQuestions = async () => {
+    const { data } = await supabase
+      .from('questions')
+      .select('*, profiles(full_name, email)')
+      .eq('status', 'Sent')
+      .order('created_at', { ascending: false })
+    setQuestions(data || [])
+  }
+
+  const submitReply = async (id) => {
+    const reply = replyTexts[id]?.trim()
+    if (!reply) return
+    const { error } = await supabase.from('questions').update({
+      reply, status: 'Replied', replied_at: new Date().toISOString(),
+    }).eq('id', id)
+    if (error) { console.error('Reply failed:', error.message); return }
+    setReplyTexts(p => { const n = { ...p }; delete n[id]; return n })
+    fetchQuestions()
   }
 
   const saveUrl = () => { localStorage.setItem('tsm_app_url', customUrl); setEditingUrl(false) }
@@ -174,6 +196,49 @@ export default function CoachDashboard({ coach, mobile }) {
           </div>
         )}
       </div>
+
+      {/* Unanswered questions */}
+      {questions.length > 0 && (
+        <div style={{ background: '#FFFFFF', border: '1px solid #EDE8E0', borderRadius: '16px', padding: '20px', marginBottom: '24px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
+            <span style={{ fontSize: '22px' }}>💬</span>
+            <h3 style={{ fontSize: '15px', fontWeight: 700, color: '#1A1410' }}>Unanswered Questions</h3>
+            <div style={{ marginLeft: 'auto', fontSize: '11px', color: '#9C8E84', fontWeight: 600 }}>{questions.length} pending</div>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            {questions.map(q => (
+              <div key={q.id} style={{ background: '#FAFAF8', border: '1px solid #EDE8E0', borderRadius: '12px', padding: '16px' }}>
+                <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginBottom: '8px', flexWrap: 'wrap' }}>
+                  <span style={{ fontSize: '13px', fontWeight: 700, color: '#1A1410' }}>{q.profiles?.full_name || q.profiles?.email}</span>
+                  <span style={{ fontSize: '11px', background: '#EDE9FE', color: '#7C3AED', padding: '2px 8px', borderRadius: '99px', fontWeight: 600 }}>{q.category}</span>
+                  {q.urgent && <span style={{ fontSize: '11px', background: '#FCE7F3', color: '#BE185D', padding: '2px 8px', borderRadius: '99px', fontWeight: 600 }}>🚨 URGENT</span>}
+                  <span style={{ fontSize: '11px', background: q.is_public ? '#DCFCE7' : '#F3F4F6', color: q.is_public ? '#15803D' : '#6B7280', padding: '2px 8px', borderRadius: '99px', fontWeight: 600 }}>{q.is_public ? '🌍 Public' : '🔒 Private'}</span>
+                  <span style={{ fontSize: '11px', color: '#BEB5AE', marginLeft: 'auto' }}>{new Date(q.created_at).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short' })}</span>
+                </div>
+                {q.subject && <div style={{ fontSize: '13px', fontWeight: 600, color: '#4A3E35', marginBottom: '4px' }}>{q.subject}</div>}
+                <div style={{ fontSize: '13px', color: '#6B5E54', lineHeight: 1.6, marginBottom: '12px' }}>{q.message}</div>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <input
+                    type="text"
+                    placeholder="Type your reply..."
+                    value={replyTexts[q.id] || ''}
+                    onChange={e => setReplyTexts(p => ({ ...p, [q.id]: e.target.value }))}
+                    onKeyDown={e => e.key === 'Enter' && submitReply(q.id)}
+                    style={{ flex: 1, background: '#FFFFFF', border: '1px solid #E0D8CE', borderRadius: '8px', padding: '9px 14px', fontSize: '13px', color: '#1A1410', outline: 'none' }}
+                  />
+                  <button
+                    onClick={() => submitReply(q.id)}
+                    disabled={!replyTexts[q.id]?.trim()}
+                    style={{ background: '#1C1917', border: 'none', borderRadius: '8px', padding: '9px 18px', color: '#F7F3EE', fontSize: '13px', fontWeight: 700, cursor: 'pointer', opacity: replyTexts[q.id]?.trim() ? 1 : 0.4 }}
+                  >
+                    Reply
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Invite link */}
       <div style={{ background: '#1C1917', borderRadius: '16px', padding: mobile ? '20px' : '28px', marginBottom: '24px' }}>
