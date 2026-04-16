@@ -117,6 +117,14 @@ const FOOD_LIBRARY = [
   { id: 'pomegranate', name: 'Pomegranate',         category: 'Fruits',        icon: '🍎', caloriesPer100: 83,  unit: 'g', defaultAmount: 100, nutrients: { vit_c: 0.5, vit_k2: 0.5, vit_b9: 0.4, potassium: 0.5, copper: 0.4, manganese: 0.3 } },
   { id: 'papaya',      name: 'Papaya',              category: 'Fruits',        icon: '🍈', caloriesPer100: 43,  unit: 'g', defaultAmount: 150, nutrients: { vit_c: 0.9, vit_a: 0.5, vit_b9: 0.4, potassium: 0.4 } },
   // ── Pantry & Superfoods ──
+  // ── Grains ──
+  { id: 'white_rice',  name: 'White Rice (cooked)', category: 'Grains',        icon: '🍚', caloriesPer100: 130, unit: 'g', defaultAmount: 150, nutrients: { vit_b1: 0.3, vit_b3: 0.2, manganese: 0.4, phosphorus: 0.2, selenium: 0.2 } },
+  { id: 'brown_rice',  name: 'Brown Rice (cooked)', category: 'Grains',        icon: '🍚', caloriesPer100: 112, unit: 'g', defaultAmount: 150, nutrients: { vit_b1: 0.4, vit_b3: 0.3, manganese: 0.9, magnesium: 0.4, phosphorus: 0.3, selenium: 0.3 } },
+  // ── Goat Dairy ──
+  { id: 'goats_milk',   name: "Goat's Milk",        category: "Goat's Dairy",  icon: '🥛', caloriesPer100: 69,  unit: 'ml', defaultAmount: 250, nutrients: { calcium: 0.7, vit_b2: 0.5, vit_b12: 0.4, phosphorus: 0.5, potassium: 0.4, vit_a: 0.4, vit_d: 0.3 } },
+  { id: 'goats_yoghurt',name: "Goat's Yoghurt",     category: "Goat's Dairy",  icon: '🫙', caloriesPer100: 59,  unit: 'g', defaultAmount: 150, nutrients: { calcium: 0.6, vit_b2: 0.5, vit_b12: 0.4, phosphorus: 0.5, potassium: 0.3, vit_a: 0.3 } },
+  { id: 'goats_kefir',  name: "Goat's Kefir",       category: "Goat's Dairy",  icon: '🥛', caloriesPer100: 52,  unit: 'ml', defaultAmount: 200, nutrients: { calcium: 0.7, vit_b2: 0.5, vit_b12: 0.5, phosphorus: 0.5, vit_k2: 0.4, potassium: 0.3, vit_a: 0.3 } },
+  // ── Pantry & Superfoods ──
   { id: 'raw_honey',   name: 'Raw Honey',           category: 'Pantry',        icon: '🍯', caloriesPer100: 304, unit: 'g', defaultAmount: 20,  nutrients: { manganese: 0.3, copper: 0.2, vit_b2: 0.2, vit_b3: 0.1, potassium: 0.2 } },
   { id: 'cacao_powder',name: 'Cacao Powder',        category: 'Pantry',        icon: '🍫', caloriesPer100: 228, unit: 'g', defaultAmount: 15,  nutrients: { magnesium: 0.9, iron: 0.7, copper: 0.8, manganese: 0.8, phosphorus: 0.6, zinc: 0.5 } },
   { id: 'coconut_oil', name: 'Coconut Oil',         category: 'Pantry',        icon: '🥥', caloriesPer100: 862, unit: 'g', defaultAmount: 15,  nutrients: { vit_e: 0.1 } },
