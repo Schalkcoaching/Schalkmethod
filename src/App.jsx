@@ -60,7 +60,7 @@ function CoachingUpsell({ user, mobile }) {
             rel="noreferrer"
             style={{ display: 'block', width: '100%', maxWidth: '320px', background: '#1C1917', color: '#F7F3EE', borderRadius: '12px', padding: '14px 24px', fontSize: '14px', fontWeight: 700, textDecoration: 'none', textAlign: 'center' }}
           >
-            Upgrade to Coaching — from $150/mo
+            Upgrade to Coaching — R1500/mo
           </a>
           <a
             href={`mailto:s_booysen@icloud.com?subject=Enquiry: 1-on-1 Coaching&body=Hi Schalk,%0A%0AI'm interested in your 1-on-1 coaching programme.%0A%0AMy name: %0AMy goals: `}
