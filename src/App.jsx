@@ -255,9 +255,17 @@ function App() {
       </nav>
 
       {/* Main content */}
-      <main style={{ flex: 1, overflowY: 'auto', height: '100vh', background: '#F7F3EE' }}>
-        {renderTab()}
-      </main>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden' }}>
+        {trialDaysLeft && (
+          <div style={{ background: '#FEF3C7', borderBottom: '1px solid #FDE68A', padding: '7px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
+            <span style={{ fontSize: '12px', fontWeight: 600, color: '#92400E' }}>⏳ {trialDaysLeft} day{trialDaysLeft === 1 ? '' : 's'} left on your free trial</span>
+            <a href={`https://schalkcoaching.lemonsqueezy.com/checkout/buy/740670e6-c268-4f1f-b454-4757e271e9a8?checkout[email]=${encodeURIComponent(user.email)}&checkout[custom][user_id]=${user.id}`} target="_blank" rel="noreferrer" style={{ fontSize: '12px', fontWeight: 700, color: '#92400E', textDecoration: 'underline' }}>Subscribe now →</a>
+          </div>
+        )}
+        <main style={{ flex: 1, overflowY: 'auto', background: '#F7F3EE' }}>
+          {renderTab()}
+        </main>
+      </div>
     </div>
   )
 }
