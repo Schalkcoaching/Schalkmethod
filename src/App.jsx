@@ -41,6 +41,42 @@ const coachTabs = [
   { id: 'dashboard', label: 'Dashboard',   icon: '📊' },
 ]
 
+function CoachingUpsell({ user, mobile }) {
+  const p = mobile ? '32px 24px' : '60px 48px'
+  return (
+    <div style={{ minHeight: '100vh', background: '#F7F3EE', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: p }}>
+      <div style={{ maxWidth: '480px', width: '100%', textAlign: 'center' }}>
+        <div style={{ fontSize: '48px', marginBottom: '20px' }}>🔒</div>
+        <h2 style={{ fontSize: mobile ? '22px' : '26px', fontWeight: 800, color: '#1A1410', marginBottom: '12px', lineHeight: 1.2 }}>
+          1-on-1 Coaching with Schalk
+        </h2>
+        <p style={{ fontSize: '14px', color: '#6B5E54', lineHeight: 1.7, marginBottom: '32px' }}>
+          Session booking is exclusive to coaching clients. Work directly with Schalk to get a personalised programme, weekly check-ins, and real accountability.
+        </p>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'center' }}>
+          <a
+            href="https://schalkcoaching.lemonsqueezy.com/checkout/buy/c3cf6707-7224-4081-a28d-d11e88cf2ce7"
+            target="_blank"
+            rel="noreferrer"
+            style={{ display: 'block', width: '100%', maxWidth: '320px', background: '#1C1917', color: '#F7F3EE', borderRadius: '12px', padding: '14px 24px', fontSize: '14px', fontWeight: 700, textDecoration: 'none', textAlign: 'center' }}
+          >
+            Upgrade to Coaching — from $150/mo
+          </a>
+          <a
+            href={`mailto:s_booysen@icloud.com?subject=Enquiry: 1-on-1 Coaching&body=Hi Schalk,%0A%0AI'm interested in your 1-on-1 coaching programme.%0A%0AMy name: %0AMy goals: `}
+            style={{ display: 'block', width: '100%', maxWidth: '320px', background: '#FFFFFF', color: '#1A1410', border: '1px solid #EDE8E0', borderRadius: '12px', padding: '14px 24px', fontSize: '14px', fontWeight: 600, textDecoration: 'none', textAlign: 'center' }}
+          >
+            Email Schalk to Enquire
+          </a>
+        </div>
+        <p style={{ fontSize: '11px', color: '#BEB5AE', marginTop: '24px' }}>
+          Already a coaching client? Contact Schalk to get your account upgraded.
+        </p>
+      </div>
+    </div>
+  )
+}
+
 function App() {
   const [user, setUser] = useState(undefined)
   const [profile, setProfile] = useState(null)
@@ -111,6 +147,7 @@ function App() {
   })()
   const tabs = coach ? coachTabs : clientTabs
   const isMobile = windowWidth < 768
+  const hasCoachingAccess = coach || ['coaching', 'grandfathered', 'coach'].includes(profile?.subscription_tier)
 
   const renderTab = () => {
     switch (activeTab) {
@@ -119,7 +156,7 @@ function App() {
       case 'goals':     return <DailyGoals user={user} mobile={isMobile} />
       case 'nutrition': return <Nutrition user={user} mobile={isMobile} />
       case 'recipes':   return <Recipes user={user} mobile={isMobile} />
-      case 'video':     return <VideoCall user={user} mobile={isMobile} />
+      case 'video':     return hasCoachingAccess ? <VideoCall user={user} mobile={isMobile} /> : <CoachingUpsell user={user} mobile={isMobile} />
       case 'workout':   return <Workout user={user} mobile={isMobile} />
       case 'qa':        return <QA user={user} mobile={isMobile} />
       case 'dashboard': return coach ? <CoachDashboard coach={user} mobile={isMobile} /> : <Home setActiveTab={setActiveTab} user={user} mobile={isMobile} />
