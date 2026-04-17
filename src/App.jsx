@@ -167,68 +167,68 @@ function App() {
   if (isMobile) {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', background: '#F7F3EE', overflow: 'hidden' }}>
-        {/* Mobile top bar */}
-        <div style={{
-          background: '#1C1917', borderBottom: '1px solid #2C2825',
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          paddingTop: 'env(safe-area-inset-top)',
-          padding: '0 16px',
-          minHeight: 'calc(52px + env(safe-area-inset-top))',
-        }}>
-          <div style={{ fontSize: '14px', fontWeight: 800, color: '#F7F3EE' }}>The Schalk Method</div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            {coach && <div style={{ fontSize: '10px', color: '#C4A882', fontWeight: 700, letterSpacing: '0.5px', textTransform: 'uppercase' }}>Coach</div>}
+        {/* Safe area top + header */}
+        <div style={{ background: '#1C1917', flexShrink: 0 }}>
+          <div style={{ height: 'env(safe-area-inset-top)' }} />
+          <div style={{
+            height: '48px', display: 'flex', alignItems: 'center',
+            justifyContent: 'space-between', paddingLeft: '18px', paddingRight: '14px',
+            borderBottom: '1px solid #2C2825',
+          }}>
+            <div>
+              <div style={{ fontSize: '13px', fontWeight: 800, color: '#F7F3EE', letterSpacing: '-0.2px' }}>The Schalk Method</div>
+              {coach && <div style={{ fontSize: '9px', color: '#C4A882', fontWeight: 700, letterSpacing: '1px', textTransform: 'uppercase', marginTop: '1px' }}>Coach Portal</div>}
+            </div>
             <button onClick={handleSignOut} style={{
-              background: 'transparent', border: '1px solid #2C2825', borderRadius: '6px',
-              padding: '4px 10px', color: '#5C5550', fontSize: '11px', cursor: 'pointer',
+              background: 'transparent', border: '1px solid #333', borderRadius: '6px',
+              padding: '5px 11px', color: '#5C5550', fontSize: '11px', cursor: 'pointer',
             }}>Sign out</button>
           </div>
         </div>
 
         {/* Trial banner */}
         {trialDaysLeft && (
-          <div style={{ background: '#FEF3C7', borderBottom: '1px solid #FDE68A', padding: '6px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ background: '#FEF3C7', borderBottom: '1px solid #FDE68A', padding: '6px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
             <span style={{ fontSize: '11px', fontWeight: 600, color: '#92400E' }}>⏳ {trialDaysLeft} day{trialDaysLeft === 1 ? '' : 's'} left on your free trial</span>
             <a href={`https://schalkcoaching.lemonsqueezy.com/checkout/buy/740670e6-c268-4f1f-b454-4757e271e9a8?checkout[email]=${encodeURIComponent(user.email)}&checkout[custom][user_id]=${user.id}`} target="_blank" rel="noreferrer" style={{ fontSize: '11px', fontWeight: 700, color: '#92400E', textDecoration: 'underline' }}>Subscribe</a>
           </div>
         )}
 
         {/* Main content */}
-        <main style={{ flex: 1, overflowY: 'auto', background: '#F7F3EE' }}>
+        <main style={{ flex: 1, overflowY: 'auto', background: '#F7F3EE', WebkitOverflowScrolling: 'touch' }}>
           {renderTab()}
         </main>
 
         {/* Bottom nav */}
-        <nav style={{
-          background: '#1C1917', borderTop: '1px solid #2C2825',
-          display: 'flex', overflowX: 'auto',
-          WebkitOverflowScrolling: 'touch',
-          scrollbarWidth: 'none',
-          paddingBottom: 'env(safe-area-inset-bottom)',
-          minHeight: 'calc(60px + env(safe-area-inset-bottom))',
-        }}>
-          {tabs.map(tab => {
-            const active = activeTab === tab.id
-            return (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                style={{
-                  flex: '0 0 auto', minWidth: '58px',
-                  display: 'flex', flexDirection: 'column',
-                  alignItems: 'center', justifyContent: 'center', gap: '2px',
-                  border: 'none', background: 'transparent', cursor: 'pointer',
-                  padding: '4px 8px',
-                  color: active ? '#C4A882' : '#5C5550',
-                  borderTop: active ? '2px solid #C4A882' : '2px solid transparent',
-                }}
-              >
-                <span style={{ fontSize: '18px' }}>{tab.icon}</span>
-                <span style={{ fontSize: '8px', fontWeight: active ? 700 : 400, whiteSpace: 'nowrap' }}>{tab.label}</span>
-              </button>
-            )
-          })}
-        </nav>
+        <div style={{ background: '#1C1917', borderTop: '1px solid #2C2825', flexShrink: 0 }}>
+          <nav style={{
+            height: '56px', display: 'flex',
+            overflowX: 'auto', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch',
+          }}>
+            {tabs.map(tab => {
+              const active = activeTab === tab.id
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  style={{
+                    flex: '1 0 auto', minWidth: '52px', maxWidth: '80px',
+                    display: 'flex', flexDirection: 'column',
+                    alignItems: 'center', justifyContent: 'center', gap: '2px',
+                    border: 'none', background: 'transparent', cursor: 'pointer',
+                    padding: '0 4px',
+                    color: active ? '#C4A882' : '#5C5550',
+                    borderTop: active ? '2px solid #C4A882' : '2px solid transparent',
+                  }}
+                >
+                  <span style={{ fontSize: '17px' }}>{tab.icon}</span>
+                  <span style={{ fontSize: '8px', fontWeight: active ? 700 : 400, whiteSpace: 'nowrap' }}>{tab.label}</span>
+                </button>
+              )
+            })}
+          </nav>
+          <div style={{ height: 'env(safe-area-inset-bottom)', background: '#1C1917' }} />
+        </div>
       </div>
     )
   }

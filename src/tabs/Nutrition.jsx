@@ -53,6 +53,10 @@ const FOOD_LIBRARY = [
   { id: 'brisket',     name: 'Brisket',             category: 'Beef',         icon: '🥩', caloriesPer100: 250, unit: 'g', defaultAmount: 200, nutrients: { vit_b3: 0.6, vit_b6: 0.4, vit_b12: 0.7, choline: 0.4, iron: 0.6, zinc: 0.6, selenium: 0.5 } },
   { id: 'ground_beef', name: 'Ground Beef (80/20)', category: 'Beef',         icon: '🥩', caloriesPer100: 254, unit: 'g', defaultAmount: 150, nutrients: { vit_b3: 0.6, vit_b6: 0.5, vit_b12: 0.8, choline: 0.5, iron: 0.6, zinc: 0.7, selenium: 0.5 } },
   { id: 'beef_liver',  name: 'Beef Liver',          category: 'Beef',         icon: '🫀', caloriesPer100: 175, unit: 'g', defaultAmount: 25,  nutrients: { vit_a: 1, vit_b2: 1, vit_b3: 0.8, vit_b5: 0.9, vit_b6: 0.7, vit_b7: 0.6, vit_b9: 1, vit_b12: 1, choline: 1, copper: 1, iron: 0.9, zinc: 0.7, selenium: 0.8, cobalt: 0.9 } },
+  { id: 'beef_heart',  name: 'Beef Heart',          category: 'Beef',         icon: '🫀', caloriesPer100: 112, unit: 'g', defaultAmount: 100, nutrients: { vit_b2: 0.6, vit_b3: 0.7, vit_b6: 0.5, vit_b12: 0.9, choline: 0.7, iron: 0.6, zinc: 0.7, selenium: 0.6, phosphorus: 0.6, coq10: 1 } },
+  { id: 'beef_kidney', name: 'Beef Kidney',         category: 'Beef',         icon: '🫘', caloriesPer100: 99,  unit: 'g', defaultAmount: 100, nutrients: { vit_a: 0.7, vit_b2: 1, vit_b3: 0.7, vit_b5: 0.8, vit_b12: 1, vit_c: 0.4, selenium: 0.9, iron: 0.7, zinc: 0.6, copper: 0.7 } },
+  { id: 'beef_tongue', name: 'Beef Tongue',         category: 'Beef',         icon: '🥩', caloriesPer100: 224, unit: 'g', defaultAmount: 100, nutrients: { vit_b2: 0.5, vit_b3: 0.5, vit_b12: 0.7, zinc: 0.6, iron: 0.5, choline: 0.5, selenium: 0.5 } },
+  { id: 'beef_bone_broth', name: 'Beef Bone Broth', category: 'Beef',         icon: '🍲', caloriesPer100: 15,  unit: 'ml', defaultAmount: 300, nutrients: { collagen: 1, glycine: 1, proline: 0.8, calcium: 0.3, magnesium: 0.2, phosphorus: 0.3 } },
   // ── Lamb ──
   { id: 'lamb_chop',   name: 'Lamb Chops',          category: 'Lamb',         icon: '🍖', caloriesPer100: 294, unit: 'g', defaultAmount: 200, nutrients: { vit_b12: 0.8, vit_b3: 0.6, zinc: 0.8, selenium: 0.6, iron: 0.7, phosphorus: 0.5 } },
   { id: 'lamb_leg',    name: 'Leg of Lamb',         category: 'Lamb',         icon: '🍖', caloriesPer100: 217, unit: 'g', defaultAmount: 200, nutrients: { vit_b12: 0.8, vit_b3: 0.6, zinc: 0.7, selenium: 0.6, iron: 0.6, phosphorus: 0.5 } },
@@ -127,6 +131,7 @@ const FOOD_LIBRARY = [
   // ── Pantry & Superfoods ──
   { id: 'raw_honey',   name: 'Raw Honey',           category: 'Pantry',        icon: '🍯', caloriesPer100: 304, unit: 'g', defaultAmount: 20,  nutrients: { manganese: 0.3, copper: 0.2, vit_b2: 0.2, vit_b3: 0.1, potassium: 0.2 } },
   { id: 'cacao_powder',name: 'Cacao Powder',        category: 'Pantry',        icon: '🍫', caloriesPer100: 228, unit: 'g', defaultAmount: 15,  nutrients: { magnesium: 0.9, iron: 0.7, copper: 0.8, manganese: 0.8, phosphorus: 0.6, zinc: 0.5 } },
+  { id: 'coconut_water',name: 'Coconut Water',       category: 'Pantry',        icon: '🥥', caloriesPer100: 19,  unit: 'ml', defaultAmount: 330, nutrients: { potassium: 0.7, magnesium: 0.3, manganese: 0.5, vit_c: 0.2, sodium: 0.2, calcium: 0.2 } },
   { id: 'coconut_oil', name: 'Coconut Oil',         category: 'Pantry',        icon: '🥥', caloriesPer100: 862, unit: 'g', defaultAmount: 15,  nutrients: { vit_e: 0.1 } },
   { id: 'olive_oil',   name: 'Olive Oil',           category: 'Pantry',        icon: '🫒', caloriesPer100: 884, unit: 'ml', defaultAmount: 15,  nutrients: { vit_e: 0.7, vit_k2: 0.5 } },
   { id: 'apple_cider_vinegar', name: 'Apple Cider Vinegar', category: 'Pantry', icon: '🍶', caloriesPer100: 22, unit: 'ml', defaultAmount: 15, nutrients: { potassium: 0.1 } },
