@@ -169,10 +169,11 @@ function App() {
       <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', background: '#F7F3EE', overflow: 'hidden' }}>
         {/* Mobile top bar */}
         <div style={{
-          height: '52px', minHeight: '52px',
           background: '#1C1917', borderBottom: '1px solid #2C2825',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          paddingTop: 'env(safe-area-inset-top)',
           padding: '0 16px',
+          minHeight: 'calc(52px + env(safe-area-inset-top))',
         }}>
           <div style={{ fontSize: '14px', fontWeight: 800, color: '#F7F3EE' }}>The Schalk Method</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -199,11 +200,12 @@ function App() {
 
         {/* Bottom nav */}
         <nav style={{
-          height: '60px', minHeight: '60px',
           background: '#1C1917', borderTop: '1px solid #2C2825',
           display: 'flex', overflowX: 'auto',
           WebkitOverflowScrolling: 'touch',
           scrollbarWidth: 'none',
+          paddingBottom: 'env(safe-area-inset-bottom)',
+          minHeight: 'calc(60px + env(safe-area-inset-bottom))',
         }}>
           {tabs.map(tab => {
             const active = activeTab === tab.id
