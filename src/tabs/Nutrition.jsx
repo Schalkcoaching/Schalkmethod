@@ -484,7 +484,7 @@ export default function Nutrition({ user, mobile }) {
                                           value={amount}
                                           min={1}
                                           onChange={e => updateAmount(slot, id, e.target.value, false)}
-                                          style={{ width: '65px', background: '#F7F3EE', border: '1px solid #E0D8CE', borderRadius: '7px', padding: '5px 8px', color: '#1A1410', fontSize: '13px', outline: 'none', textAlign: 'center' }}
+                                          style={{ width: '65px', background: '#F7F3EE', border: '1px solid #E0D8CE', borderRadius: '7px', padding: '5px 8px', color: '#1A1410', fontSize: '16px', outline: 'none', textAlign: 'center' }}
                                         />
                                         <span style={{ fontSize: '12px', color: '#9C8E84', minWidth: '16px' }}>{displayUnit}</span>
                                       </>
