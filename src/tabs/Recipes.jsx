@@ -314,10 +314,17 @@ export default function Recipes({ user, mobile }) {
     }
     return (
       <div style={{ padding: p, minHeight: '100vh', background: '#F7F3EE' }}>
+        {/* Tab switcher — always first */}
+        <div style={{ display: 'flex', background: '#EDE8E0', borderRadius: '12px', padding: '4px', marginBottom: '20px' }}>
+          {[{ id: 'recipes', label: '📖 Recipes' }, { id: 'ideas', label: '💡 Meal Ideas' }].map(t => (
+            <button key={t.id} onClick={() => setTab(t.id)} style={{ flex: 1, padding: '9px', border: 'none', borderRadius: '10px', fontSize: '13px', fontWeight: 600, cursor: 'pointer', background: tab === t.id ? '#1A1410' : 'transparent', color: tab === t.id ? '#F7F3EE' : '#6B5E54' }}>{t.label}</button>
+          ))}
+        </div>
+
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '20px', gap: '12px', flexWrap: 'wrap' }}>
           <div>
             <h1 style={{ fontSize: mobile ? '22px' : '28px', fontWeight: 800, color: '#1A1410', margin: 0 }}>Meal Ideas</h1>
-            <p style={{ margin: '4px 0 0', fontSize: '13px', color: '#9C8E84' }}>Quick food combos to keep it simple</p>
+            <p style={{ margin: '4px 0 0', fontSize: '13px', color: '#9C8E84' }}>Quick food combos — no full recipe needed</p>
           </div>
           {coach && (
             <button onClick={() => setEditingIdea(EMPTY_IDEA)}
@@ -325,13 +332,6 @@ export default function Recipes({ user, mobile }) {
               + Add Idea
             </button>
           )}
-        </div>
-
-        {/* Tab switcher */}
-        <div style={{ display: 'flex', background: '#EDE8E0', borderRadius: '12px', padding: '4px', marginBottom: '20px' }}>
-          {[{ id: 'recipes', label: '📖 Recipes' }, { id: 'ideas', label: '💡 Meal Ideas' }].map(t => (
-            <button key={t.id} onClick={() => setTab(t.id)} style={{ flex: 1, padding: '8px', border: 'none', borderRadius: '10px', fontSize: '13px', fontWeight: 600, cursor: 'pointer', transition: 'all 0.15s', background: tab === t.id ? '#1A1410' : 'transparent', color: tab === t.id ? '#F7F3EE' : '#6B5E54' }}>{t.label}</button>
-          ))}
         </div>
 
         {/* Edit idea form */}
@@ -402,11 +402,18 @@ export default function Recipes({ user, mobile }) {
   // ──────────────────────────────────────────────────────────────────────────────
   return (
     <div style={{ padding: p, minHeight: '100vh', background: '#F7F3EE' }}>
+      {/* Tab switcher — always first */}
+      <div style={{ display: 'flex', background: '#EDE8E0', borderRadius: '12px', padding: '4px', marginBottom: '20px' }}>
+        {[{ id: 'recipes', label: '📖 Recipes' }, { id: 'ideas', label: '💡 Meal Ideas' }].map(t => (
+          <button key={t.id} onClick={() => setTab(t.id)} style={{ flex: 1, padding: '9px', border: 'none', borderRadius: '10px', fontSize: '13px', fontWeight: 600, cursor: 'pointer', background: tab === t.id ? '#1A1410' : 'transparent', color: tab === t.id ? '#F7F3EE' : '#6B5E54' }}>{t.label}</button>
+        ))}
+      </div>
+
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '20px', gap: '12px', flexWrap: 'wrap' }}>
         <div>
           <h1 style={{ fontSize: mobile ? '22px' : '28px', fontWeight: 800, color: '#1A1410', margin: 0 }}>Schalk's Recipes</h1>
-          <p style={{ margin: '4px 0 0', fontSize: '13px', color: '#9C8E84' }}>Optimal meals built for your goals</p>
+          <p style={{ margin: '4px 0 0', fontSize: '13px', color: '#9C8E84' }}>Full recipes with ingredients & instructions</p>
         </div>
         {coach && (
           <button onClick={() => setEditing(EMPTY_RECIPE)}
@@ -414,13 +421,6 @@ export default function Recipes({ user, mobile }) {
             + Add Recipe
           </button>
         )}
-      </div>
-
-      {/* Tab switcher */}
-      <div style={{ display: 'flex', background: '#EDE8E0', borderRadius: '12px', padding: '4px', marginBottom: '20px' }}>
-        {[{ id: 'recipes', label: '📖 Recipes' }, { id: 'ideas', label: '💡 Meal Ideas' }].map(t => (
-          <button key={t.id} onClick={() => setTab(t.id)} style={{ flex: 1, padding: '8px', border: 'none', borderRadius: '10px', fontSize: '13px', fontWeight: 600, cursor: 'pointer', transition: 'all 0.15s', background: tab === t.id ? '#1A1410' : 'transparent', color: tab === t.id ? '#F7F3EE' : '#6B5E54' }}>{t.label}</button>
-        ))}
       </div>
 
       {/* Search */}
