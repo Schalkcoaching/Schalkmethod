@@ -55,7 +55,7 @@ function CoachingUpsell({ user, mobile }) {
         </p>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'center' }}>
           <a
-            href="https://schalkcoaching.lemonsqueezy.com/checkout/buy/c3cf6707-7224-4081-a28d-d11e88cf2ce7"
+            href="https://paystack.shop/pay/theschalkmethod"
             target="_blank"
             rel="noreferrer"
             style={{ display: 'block', width: '100%', maxWidth: '320px', background: '#1C1917', color: '#F7F3EE', borderRadius: '12px', padding: '14px 24px', fontSize: '14px', fontWeight: 700, textDecoration: 'none', textAlign: 'center' }}
@@ -190,7 +190,7 @@ function App() {
         {trialDaysLeft && (
           <div style={{ background: '#FEF3C7', borderBottom: '1px solid #FDE68A', padding: '6px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
             <span style={{ fontSize: '11px', fontWeight: 600, color: '#92400E' }}>⏳ {trialDaysLeft} day{trialDaysLeft === 1 ? '' : 's'} left on your free trial</span>
-            <a href={`https://schalkcoaching.lemonsqueezy.com/checkout/buy/740670e6-c268-4f1f-b454-4757e271e9a8?checkout[email]=${encodeURIComponent(user.email)}&checkout[custom][user_id]=${user.id}`} target="_blank" rel="noreferrer" style={{ fontSize: '11px', fontWeight: 700, color: '#92400E', textDecoration: 'underline' }}>Subscribe</a>
+            <a href={`https://paystack.shop/pay/schalkmethod`} target="_blank" rel="noreferrer" style={{ fontSize: '11px', fontWeight: 700, color: '#92400E', textDecoration: 'underline' }}>Subscribe</a>
           </div>
         )}
 
@@ -298,7 +298,7 @@ function App() {
         {trialDaysLeft && (
           <div style={{ background: '#FEF3C7', borderBottom: '1px solid #FDE68A', padding: '7px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
             <span style={{ fontSize: '12px', fontWeight: 600, color: '#92400E' }}>⏳ {trialDaysLeft} day{trialDaysLeft === 1 ? '' : 's'} left on your free trial</span>
-            <a href={`https://schalkcoaching.lemonsqueezy.com/checkout/buy/740670e6-c268-4f1f-b454-4757e271e9a8?checkout[email]=${encodeURIComponent(user.email)}&checkout[custom][user_id]=${user.id}`} target="_blank" rel="noreferrer" style={{ fontSize: '12px', fontWeight: 700, color: '#92400E', textDecoration: 'underline' }}>Subscribe now →</a>
+            <a href={`https://paystack.shop/pay/schalkmethod`} target="_blank" rel="noreferrer" style={{ fontSize: '12px', fontWeight: 700, color: '#92400E', textDecoration: 'underline' }}>Subscribe now →</a>
           </div>
         )}
         <main style={{ flex: 1, overflowY: 'auto', background: '#F7F3EE' }}>
