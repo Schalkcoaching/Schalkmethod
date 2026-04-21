@@ -1,22 +1,18 @@
 import { useState, useEffect } from 'react'
 import { supabase, isCoach } from '../lib/supabase'
 
-const FILTERS = ['All', 'Breakfast', 'Lunch', 'Dinner', 'Pre-Workout', 'Post-Workout', 'Snack', 'Shake']
+const FILTERS = ['All', 'Meals', 'Shakes', 'Snacks']
 
 const COLORS = {
-  Breakfast:    { bg: '#FFF7ED', border: '#FED7AA', text: '#C2410C', dot: '#FB923C' },
-  Lunch:        { bg: '#F0FDF4', border: '#BBF7D0', text: '#15803D', dot: '#4ADE80' },
-  Dinner:       { bg: '#EEF2FF', border: '#C7D2FE', text: '#4338CA', dot: '#818CF8' },
-  Snack:        { bg: '#FFF1F2', border: '#FECDD3', text: '#BE123C', dot: '#FB7185' },
-  Shake:        { bg: '#F0F9FF', border: '#BAE6FD', text: '#0369A1', dot: '#38BDF8' },
-  'Pre-Workout':  { bg: '#FDF4FF', border: '#E9D5FF', text: '#7E22CE', dot: '#C084FC' },
-  'Post-Workout': { bg: '#F0FDF4', border: '#BBF7D0', text: '#166534', dot: '#34D399' },
+  Meals:  { bg: '#F0FDF4', border: '#BBF7D0', text: '#15803D', dot: '#4ADE80' },
+  Shakes: { bg: '#F0F9FF', border: '#BAE6FD', text: '#0369A1', dot: '#38BDF8' },
+  Snacks: { bg: '#FFF7ED', border: '#FED7AA', text: '#C2410C', dot: '#FB923C' },
 }
 const c = key => COLORS[key] || { bg: '#F7F3EE', border: '#EDE8E0', text: '#6B5E54', dot: '#C4A882' }
 
-const EMPTY_RECIPE = { title: '', description: '', category: 'Breakfast', ingredients: [{ amount: '', item: '' }], instructions: '', macros: { calories: '', protein: '', carbs: '', fat: '' } }
-const EMPTY_IDEA   = { title: '', meal_time: 'Breakfast', foods: '', note: '' }
-const MEAL_TIMES   = ['Breakfast', 'Lunch', 'Dinner', 'Pre-Workout', 'Post-Workout', 'Snack']
+const EMPTY_RECIPE = { title: '', description: '', category: 'Meals', ingredients: [{ amount: '', item: '' }], instructions: '', macros: { calories: '', protein: '', carbs: '', fat: '' } }
+const EMPTY_IDEA   = { title: '', meal_time: 'Meals', foods: '', note: '' }
+const MEAL_TIMES   = ['Meals', 'Shakes', 'Snacks']
 
 export default function Recipes({ user, mobile }) {
   const coach = isCoach(user)
@@ -165,7 +161,7 @@ export default function Recipes({ user, mobile }) {
             <div>
               <label style={labelStyle}>Meal Time</label>
               <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                {FILTERS.filter(f => f !== 'All').map(cat => (
+                {MEAL_TIMES.map(cat => (
                   <button key={cat} onClick={() => setEditing(ed => ({ ...ed, category: cat }))} style={{ padding: '6px 14px', borderRadius: '99px', border: '1px solid', fontSize: '12px', fontWeight: 600, cursor: 'pointer', background: editing.category === cat ? '#1A1410' : 'white', color: editing.category === cat ? '#F7F3EE' : '#6B5E54', borderColor: editing.category === cat ? '#1A1410' : '#EDE8E0' }}>{cat}</button>
                 ))}
               </div>
