@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { supabase, isCoach } from '../lib/supabase'
 
 const CATEGORIES = ['All', 'Breakfast', 'Lunch', 'Dinner', 'Snack', 'Shake']
+const MEAL_TIMES = ['Breakfast', 'Lunch', 'Dinner', 'Pre-Workout', 'Post-Workout', 'Snack']
 
 const CAT_COLORS = {
   Breakfast: { bg: '#FFF7ED', border: '#FED7AA', text: '#C2410C', dot: '#FB923C' },
@@ -19,23 +20,53 @@ const EMPTY_RECIPE = {
   instructions: '', macros: { calories: '', protein: '', carbs: '', fat: '' },
 }
 
+const EMPTY_IDEA = { title: '', meal_time: 'Breakfast', foods: '', note: '' }
+
 export default function Recipes({ user, mobile }) {
   const coach = isCoach(user)
+  const [tab, setTab] = useState('recipes')            // 'recipes' | 'ideas'
   const [recipes, setRecipes] = useState([])
+  const [ideas, setIdeas] = useState([])
   const [loading, setLoading] = useState(true)
   const [activeCategory, setActiveCategory] = useState('All')
   const [search, setSearch] = useState('')
-  const [selected, setSelected] = useState(null)      // full-screen view
-  const [editing, setEditing] = useState(null)        // edit form (null = closed, EMPTY_RECIPE = new, recipe = editing)
+  const [selected, setSelected] = useState(null)
+  const [editing, setEditing] = useState(null)
+  const [editingIdea, setEditingIdea] = useState(null)
   const [saving, setSaving] = useState(false)
 
-  useEffect(() => { fetchRecipes() }, [])
+  useEffect(() => { fetchRecipes(); fetchIdeas() }, [])
 
   const fetchRecipes = async () => {
     setLoading(true)
     const { data } = await supabase.from('recipes').select('*').order('created_at', { ascending: false })
     setRecipes(data || [])
     setLoading(false)
+  }
+
+  const fetchIdeas = async () => {
+    const { data } = await supabase.from('meal_ideas').select('*').order('created_at', { ascending: false })
+    setIdeas(data || [])
+  }
+
+  const saveIdea = async () => {
+    if (!editingIdea?.title?.trim() || !editingIdea?.foods?.trim()) return
+    setSaving(true)
+    const payload = { title: editingIdea.title.trim(), meal_time: editingIdea.meal_time, foods: editingIdea.foods.trim(), note: editingIdea.note?.trim() || null }
+    if (editingIdea.id) {
+      await supabase.from('meal_ideas').update(payload).eq('id', editingIdea.id)
+    } else {
+      await supabase.from('meal_ideas').insert(payload)
+    }
+    setSaving(false)
+    setEditingIdea(null)
+    fetchIdeas()
+  }
+
+  const deleteIdea = async (id) => {
+    if (!window.confirm('Delete this meal idea?')) return
+    await supabase.from('meal_ideas').delete().eq('id', id)
+    fetchIdeas()
   }
 
   const filtered = recipes.filter(r => {
@@ -274,12 +305,105 @@ export default function Recipes({ user, mobile }) {
   }
 
   // ──────────────────────────────────────────────────────────────────────────────
+  // MEAL IDEAS VIEW
+  // ──────────────────────────────────────────────────────────────────────────────
+  if (tab === 'ideas') {
+    const TIME_COLORS = {
+      'Breakfast': '#FB923C', 'Lunch': '#4ADE80', 'Dinner': '#818CF8',
+      'Pre-Workout': '#F472B6', 'Post-Workout': '#34D399', 'Snack': '#FBBF24',
+    }
+    return (
+      <div style={{ padding: p, minHeight: '100vh', background: '#F7F3EE' }}>
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '20px', gap: '12px', flexWrap: 'wrap' }}>
+          <div>
+            <h1 style={{ fontSize: mobile ? '22px' : '28px', fontWeight: 800, color: '#1A1410', margin: 0 }}>Meal Ideas</h1>
+            <p style={{ margin: '4px 0 0', fontSize: '13px', color: '#9C8E84' }}>Quick food combos to keep it simple</p>
+          </div>
+          {coach && (
+            <button onClick={() => setEditingIdea(EMPTY_IDEA)}
+              style={{ padding: '10px 18px', background: '#1A1410', color: '#F7F3EE', border: 'none', borderRadius: '12px', fontSize: '13px', fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap' }}>
+              + Add Idea
+            </button>
+          )}
+        </div>
+
+        {/* Tab switcher */}
+        <div style={{ display: 'flex', background: '#EDE8E0', borderRadius: '12px', padding: '4px', marginBottom: '20px' }}>
+          {[{ id: 'recipes', label: '📖 Recipes' }, { id: 'ideas', label: '💡 Meal Ideas' }].map(t => (
+            <button key={t.id} onClick={() => setTab(t.id)} style={{ flex: 1, padding: '8px', border: 'none', borderRadius: '10px', fontSize: '13px', fontWeight: 600, cursor: 'pointer', transition: 'all 0.15s', background: tab === t.id ? '#1A1410' : 'transparent', color: tab === t.id ? '#F7F3EE' : '#6B5E54' }}>{t.label}</button>
+          ))}
+        </div>
+
+        {/* Edit idea form */}
+        {editingIdea && (
+          <div style={{ background: '#FFFFFF', border: '1px solid #EDE8E0', borderRadius: '16px', padding: '20px', marginBottom: '20px' }}>
+            <h3 style={{ margin: '0 0 16px', fontSize: '15px', fontWeight: 700 }}>{editingIdea.id ? 'Edit Meal Idea' : 'New Meal Idea'}</h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <input value={editingIdea.title} onChange={e => setEditingIdea(d => ({ ...d, title: e.target.value }))} placeholder="e.g. Post-workout plate" style={inputStyle} />
+              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                {MEAL_TIMES.map(t => (
+                  <button key={t} onClick={() => setEditingIdea(d => ({ ...d, meal_time: t }))} style={{ padding: '5px 12px', borderRadius: '99px', border: '1px solid', fontSize: '11px', fontWeight: 600, cursor: 'pointer', background: editingIdea.meal_time === t ? '#1A1410' : 'white', color: editingIdea.meal_time === t ? '#F7F3EE' : '#6B5E54', borderColor: editingIdea.meal_time === t ? '#1A1410' : '#EDE8E0' }}>{t}</button>
+                ))}
+              </div>
+              <textarea value={editingIdea.foods} onChange={e => setEditingIdea(d => ({ ...d, foods: e.target.value }))} placeholder={"List the foods, one per line:\ne.g.\n3 eggs\n25g beef liver\n1 avocado\n100g sweet potato"} rows={5} style={{ ...inputStyle, resize: 'vertical', fontFamily: 'inherit' }} />
+              <input value={editingIdea.note || ''} onChange={e => setEditingIdea(d => ({ ...d, note: e.target.value }))} placeholder="Optional tip or note..." style={inputStyle} />
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <button onClick={saveIdea} disabled={saving} style={{ flex: 1, padding: '11px', background: '#1A1410', color: '#F7F3EE', border: 'none', borderRadius: '10px', fontWeight: 700, fontSize: '13px', cursor: 'pointer' }}>{saving ? 'Saving...' : 'Save'}</button>
+                <button onClick={() => setEditingIdea(null)} style={{ padding: '11px 18px', background: 'transparent', border: '1px solid #EDE8E0', borderRadius: '10px', fontWeight: 600, fontSize: '13px', cursor: 'pointer', color: '#6B5E54' }}>Cancel</button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {ideas.length === 0 && !editingIdea ? (
+          <div style={{ textAlign: 'center', padding: '60px 20px' }}>
+            <div style={{ fontSize: '40px', marginBottom: '12px' }}>💡</div>
+            <div style={{ fontSize: '15px', fontWeight: 600, color: '#6B5E54', marginBottom: '6px' }}>No meal ideas yet</div>
+            {coach && <div style={{ fontSize: '13px', color: '#BEB5AE' }}>Click "Add Idea" to create your first one.</div>}
+          </div>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            {ideas.map(idea => (
+              <div key={idea.id} style={{ background: '#FFFFFF', border: '1px solid #EDE8E0', borderRadius: '16px', overflow: 'hidden' }}>
+                <div style={{ height: '4px', background: TIME_COLORS[idea.meal_time] || '#C4A882' }} />
+                <div style={{ padding: '16px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
+                    <div>
+                      <span style={{ fontSize: '10px', fontWeight: 700, color: '#9C8E84', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{idea.meal_time}</span>
+                      <div style={{ fontSize: '16px', fontWeight: 700, color: '#1A1410', marginTop: '2px' }}>{idea.title}</div>
+                    </div>
+                    {coach && (
+                      <div style={{ display: 'flex', gap: '6px' }}>
+                        <button onClick={() => setEditingIdea(idea)} style={{ background: '#F7F3EE', border: 'none', borderRadius: '8px', padding: '6px 10px', fontSize: '11px', fontWeight: 600, cursor: 'pointer', color: '#6B5E54' }}>Edit</button>
+                        <button onClick={() => deleteIdea(idea.id)} style={{ background: '#FFF1F2', border: 'none', borderRadius: '8px', padding: '6px 10px', fontSize: '11px', fontWeight: 600, cursor: 'pointer', color: '#BE123C' }}>Delete</button>
+                      </div>
+                    )}
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    {(idea.foods || '').split('\n').filter(f => f.trim()).map((food, i) => (
+                      <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#3D3530' }}>
+                        <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: TIME_COLORS[idea.meal_time] || '#C4A882', flexShrink: 0 }} />
+                        {food.trim()}
+                      </div>
+                    ))}
+                  </div>
+                  {idea.note && <div style={{ marginTop: '10px', fontSize: '12px', color: '#9C8E84', fontStyle: 'italic', paddingTop: '10px', borderTop: '1px solid #F0EBE3' }}>💡 {idea.note}</div>}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  // ──────────────────────────────────────────────────────────────────────────────
   // MAIN RECIPES LIST
   // ──────────────────────────────────────────────────────────────────────────────
   return (
     <div style={{ padding: p, minHeight: '100vh', background: '#F7F3EE' }}>
       {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '24px', gap: '12px', flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '20px', gap: '12px', flexWrap: 'wrap' }}>
         <div>
           <h1 style={{ fontSize: mobile ? '22px' : '28px', fontWeight: 800, color: '#1A1410', margin: 0 }}>Schalk's Recipes</h1>
           <p style={{ margin: '4px 0 0', fontSize: '13px', color: '#9C8E84' }}>Optimal meals built for your goals</p>
@@ -290,6 +414,13 @@ export default function Recipes({ user, mobile }) {
             + Add Recipe
           </button>
         )}
+      </div>
+
+      {/* Tab switcher */}
+      <div style={{ display: 'flex', background: '#EDE8E0', borderRadius: '12px', padding: '4px', marginBottom: '20px' }}>
+        {[{ id: 'recipes', label: '📖 Recipes' }, { id: 'ideas', label: '💡 Meal Ideas' }].map(t => (
+          <button key={t.id} onClick={() => setTab(t.id)} style={{ flex: 1, padding: '8px', border: 'none', borderRadius: '10px', fontSize: '13px', fontWeight: 600, cursor: 'pointer', transition: 'all 0.15s', background: tab === t.id ? '#1A1410' : 'transparent', color: tab === t.id ? '#F7F3EE' : '#6B5E54' }}>{t.label}</button>
+        ))}
       </div>
 
       {/* Search */}
