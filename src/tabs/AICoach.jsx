@@ -34,7 +34,6 @@ export default function AICoach({ user, mobile }) {
   const [messages, setMessages] = useState([])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
   const bottomRef = useRef(null)
   const inputRef = useRef(null)
 
@@ -47,7 +46,6 @@ export default function AICoach({ user, mobile }) {
     if (!content || loading) return
 
     setInput('')
-    setError('')
     const userMsg = { role: 'user', content }
     const nextMessages = [...messages, userMsg]
     setMessages(nextMessages)
@@ -58,12 +56,12 @@ export default function AICoach({ user, mobile }) {
         body: { messages: nextMessages },
       })
 
-      if (fnError || data?.error) throw new Error(fnError?.message || data?.error)
+      if (fnError || data?.error) throw new Error(fnError?.message || data?.error || 'Unknown error')
 
       setMessages(prev => [...prev, { role: 'assistant', content: data.reply }])
     } catch (err) {
-      setError('Something went wrong. Try again.')
-      setMessages(prev => prev.slice(0, -1))
+      console.error('AI Coach error:', err)
+      setMessages(prev => [...prev, { role: 'assistant', content: `⚠️ Error: ${err.message}. Check that the Edge Function is deployed and the API key is set in Supabase secrets.` }])
     } finally {
       setLoading(false)
       setTimeout(() => inputRef.current?.focus(), 100)
@@ -96,7 +94,7 @@ export default function AICoach({ user, mobile }) {
           </div>
           {messages.length > 0 && (
             <button
-              onClick={() => { setMessages([]); setError('') }}
+              onClick={() => setMessages([])}
               style={{ marginLeft: 'auto', background: 'transparent', border: '1px solid #2C2825', borderRadius: '8px', padding: '5px 12px', color: '#5C5550', fontSize: '11px', cursor: 'pointer', fontWeight: 600 }}
             >
               Clear
@@ -170,11 +168,6 @@ export default function AICoach({ user, mobile }) {
               </div>
             )}
 
-            {error && (
-              <div style={{ textAlign: 'center', fontSize: '12px', color: '#DC2626', background: '#FEF2F2', border: '1px solid #FECACA', borderRadius: '10px', padding: '10px 14px' }}>
-                {error}
-              </div>
-            )}
           </div>
         )}
 
