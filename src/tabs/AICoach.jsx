@@ -78,7 +78,7 @@ export default function AICoach({ user, mobile }) {
     setLoading(true)
 
     try {
-      const apiKey = import.meta.env.VITE_ANTHROPIC_API_KEY || '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'
+      const apiKey = import.meta.env.VITE_ANTHROPIC_API_KEY
 
       const response = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
