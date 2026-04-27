@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
+import { supabase } from '../lib/supabase'
 
 const SYSTEM_PROMPT = `You are the TSM AI Coach — a health and nutrition assistant for The Schalk Method, a coaching programme run by Schalk Booysen, an 18-year-old health coach from South Africa.
 
@@ -78,27 +79,12 @@ export default function AICoach({ user, mobile }) {
     setLoading(true)
 
     try {
-      const apiKey = import.meta.env.VITE_ANTHROPIC_API_KEY || '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'
-
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': apiKey,
-          'anthropic-version': '2023-06-01',
-          'anthropic-dangerous-direct-browser-access': 'true',
-        },
-        body: JSON.stringify({
-          model: 'claude-3-haiku-20240307',
-          max_tokens: 1024,
-          system: SYSTEM_PROMPT,
-          messages: nextMessages,
-        }),
+      const { data, error } = await supabase.functions.invoke('ai-coach', {
+        body: { messages: nextMessages },
       })
 
-      const data = await response.json()
-      if (!response.ok) throw new Error(JSON.stringify(data.error))
-      setMessages(prev => [...prev, { role: 'assistant', content: data.content[0].text }])
+      if (error || data?.error) throw new Error(error?.message || data?.error)
+      setMessages(prev => [...prev, { role: 'assistant', content: data.reply }])
     } catch (err) {
       console.error('AI Coach error:', err)
       setMessages(prev => [...prev, { role: 'assistant', content: `⚠️ ${err.message}` }])
