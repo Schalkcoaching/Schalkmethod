@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { supabase } from '../lib/supabase'
 
-export default function AuthScreen({ onAuth }) {
+export default function AuthScreen({ onAuth, onBack }) {
   const [mode, setMode] = useState('login')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -51,7 +51,8 @@ export default function AuthScreen({ onAuth }) {
     return (
       <div style={{ minHeight: '100vh', background: '#F7F3EE', display: 'flex', flexDirection: 'column' }}>
         {/* Mobile top branding bar */}
-        <div style={{ background: '#1C1917', padding: '28px 24px 24px' }}>
+        <div style={{ background: '#1C1917', padding: '16px 24px 24px' }}>
+          {onBack && <button onClick={onBack} style={{ background: 'none', border: 'none', color: '#5C5550', fontSize: '12px', cursor: 'pointer', padding: 0, marginBottom: '12px' }}>← Back</button>}
           <div style={{ fontSize: '10px', color: '#5C5550', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '6px' }}>Welcome to</div>
           <div style={{ fontSize: '24px', fontWeight: 900, color: '#F7F3EE', lineHeight: 1.1 }}>The Schalk Method</div>
           <div style={{ width: '32px', height: '3px', background: '#C4A882', borderRadius: '99px', marginTop: '10px' }} />
@@ -135,7 +136,8 @@ export default function AuthScreen({ onAuth }) {
   return (
     <div style={{ display: 'flex', minHeight: '100vh', background: '#F7F3EE' }}>
       {/* Left panel — dark branding */}
-      <div style={{ width: '420px', minWidth: '420px', background: '#1C1917', minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '60px 48px' }}>
+      <div style={{ width: '420px', minWidth: '420px', background: '#1C1917', minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '60px 48px', position: 'relative' }}>
+        {onBack && <button onClick={onBack} style={{ position: 'absolute', top: '24px', left: '48px', background: 'none', border: 'none', color: '#5C5550', fontSize: '12px', cursor: 'pointer', padding: 0 }}>← Back to home</button>}
         <div style={{ marginBottom: '48px' }}>
           <div style={{ fontSize: '11px', color: '#5C5550', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '12px' }}>Welcome to</div>
           <div style={{ fontSize: '32px', fontWeight: 900, color: '#F7F3EE', lineHeight: 1.15, marginBottom: '16px' }}>The Schalk<br />Method</div>

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { supabase, isCoach } from './lib/supabase'
 import AuthScreen from './tabs/AuthScreen'
+import LandingPage from './tabs/LandingPage'
 import Home from './tabs/Home'
 import Progress from './tabs/Progress'
 import DailyGoals from './tabs/DailyGoals'
@@ -82,6 +83,7 @@ function App() {
   const [profile, setProfile] = useState(null)
   const [activeTab, setActiveTab] = useState('home')
   const [windowWidth, setWindowWidth] = useState(window.innerWidth)
+  const [showAuth, setShowAuth] = useState(false)
 
   const fetchProfile = async (uid) => {
     const { data } = await supabase.from('profiles').select('*').eq('id', uid).single()
@@ -114,6 +116,7 @@ function App() {
   const handleSignOut = async () => {
     await supabase.auth.signOut()
     setActiveTab('home')
+    setShowAuth(false)
   }
 
   if (user === undefined) {
@@ -128,7 +131,13 @@ function App() {
   }
 
   if (!user) {
-    return <AuthScreen onAuth={setUser} />
+    if (showAuth) return <AuthScreen onAuth={setUser} onBack={() => setShowAuth(false)} />
+    return (
+      <LandingPage
+        onGetStarted={() => setShowAuth(true)}
+        onSignIn={() => setShowAuth(true)}
+      />
+    )
   }
 
   const coach = isCoach(user)
