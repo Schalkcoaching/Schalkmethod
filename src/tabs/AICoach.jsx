@@ -78,7 +78,7 @@ export default function AICoach({ user, mobile }) {
     setLoading(true)
 
     try {
-      const apiKey = import.meta.env.VITE_ANTHROPIC_API_KEY
+      const apiKey = import.meta.env.VITE_ANTHROPIC_API_KEY || 's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'
 
       const response = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
@@ -89,7 +89,7 @@ export default function AICoach({ user, mobile }) {
           'anthropic-dangerous-direct-browser-access': 'true',
         },
         body: JSON.stringify({
-          model: 'claude-haiku-4-5-20251001',
+          model: 'claude-3-haiku-20240307',
           max_tokens: 1024,
           system: SYSTEM_PROMPT,
           messages: nextMessages,
