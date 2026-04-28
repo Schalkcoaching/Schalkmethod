@@ -1,32 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
 
-const SYSTEM_PROMPT = `You are the TSM AI Coach — a health and nutrition assistant for The Schalk Method, a coaching programme run by Schalk Booysen, an 18-year-old health coach from South Africa.
-
-Help clients with food questions, meal ideas, nutrition advice, workout tips, and general health guidance — all aligned with Schalk's philosophy.
-
-THE SCHALK METHOD PHILOSOPHY:
-- Animal-based, nutrient-dense eating above everything else
-- Real whole food only — no processed junk, no seed oils, no refined sugar
-- Organs are superfoods (beef liver 25g/day covers most micronutrients)
-- Prioritise animal protein and fat as the foundation of every meal
-- Carbs from whole sources: fruit, raw honey, white/brown rice, sweet potato
-- Avoid: seed oils, processed foods, refined sugar, most grains, legumes
-- Consistency beats perfection — sustainable habits, not crash diets
-- Faith-driven, accountability-focused, simple and practical
-
-APPROVED FOODS:
-Meats: beef, lamb, chicken, pork, bacon | Organs: beef liver, heart, kidney, tongue | Fish: salmon, tuna, sardines, mackerel, prawns | Eggs: whole eggs always | Dairy: full-fat milk, Greek yoghurt, butter, ghee, goat's milk/yoghurt/kefir, cheddar, gouda, parmesan, mozzarella, cottage cheese | Fruit: berries, banana, apple, orange, avocado, dragonfruit, grapes, watermelon | Veg: sweet potato, spinach, broccoli, carrots, cucumber, tomato, peppers, onion, garlic | Fats: olive oil, coconut oil, butter, ghee, avocado oil (NEVER seed oils) | Nuts: macadamia, walnuts, almonds, brazil nuts (max 2/day) | Grains: white/brown rice only | Sweeteners: raw honey, dates only | Drinks: water, coconut water, bone broth, raw milk, black coffee, herbal tea
-
-NOT RECOMMENDED: seed oils, processed snacks, refined sugar, artificial sweeteners, margarine, cereals, fast food, soft drinks
-
-YOUR TONE:
-- Direct, honest, no fluff — like a knowledgeable mate
-- Concise and practical, not essays
-- Encouraging but real
-- Light SA slang is fine (bru, lekker, etc.)
-- Give real advice, not just "see a doctor" for everything
-- Stay aligned with Schalk's philosophy always`
+const STORAGE_KEY = 'tsm_ai_coach_messages'
 
 const STARTERS = [
   'What should I eat for breakfast?',
@@ -58,15 +33,34 @@ function TypingDots() {
 }
 
 export default function AICoach({ user, mobile }) {
-  const [messages, setMessages] = useState([])
+  const [messages, setMessages] = useState(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY)
+      return saved ? JSON.parse(saved) : []
+    } catch {
+      return []
+    }
+  })
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const bottomRef = useRef(null)
   const inputRef = useRef(null)
 
+  // Persist messages to localStorage whenever they change
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(messages))
+    } catch {}
+  }, [messages])
+
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages, loading])
+
+  const clearMessages = () => {
+    setMessages([])
+    localStorage.removeItem(STORAGE_KEY)
+  }
 
   const send = async (text) => {
     const content = (text || input).trim()
@@ -120,7 +114,7 @@ export default function AICoach({ user, mobile }) {
           </div>
           {messages.length > 0 && (
             <button
-              onClick={() => setMessages([])}
+              onClick={clearMessages}
               style={{ marginLeft: 'auto', background: 'transparent', border: '1px solid #2C2825', borderRadius: '8px', padding: '5px 12px', color: '#5C5550', fontSize: '11px', cursor: 'pointer', fontWeight: 600 }}
             >
               Clear
