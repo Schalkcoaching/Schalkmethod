@@ -255,7 +255,7 @@ export default function LandingPage({ onGetStarted, onSignIn }) {
 
       {/* About Schalk */}
       <section style={{ padding: '64px 24px', maxWidth: '600px', margin: '0 auto', textAlign: 'center' }}>
-        <div style={{ width: '64px', height: '64px', background: '#C4A882', borderRadius: '50%', margin: '0 auto 20px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '28px' }}>S</div>
+        <img src="/schalk.jpg" alt="Schalk Booysen" style={{ width: '120px', height: '120px', borderRadius: '50%', objectFit: 'cover', objectPosition: 'top', margin: '0 auto 20px', display: 'block', border: '3px solid #C4A882' }} />
         <h2 style={{ fontSize: '22px', fontWeight: 800, color: '#F7F3EE', margin: '0 0 16px', letterSpacing: '-0.3px' }}>About Schalk</h2>
         <p style={{ fontSize: '14px', color: '#9C8E84', lineHeight: 1.8, margin: '0 0 16px' }}>
           I'm Schalk, a health coach based in South Africa. I went from struggling with my own health to competing and thriving on an animal-based diet. Now I help others do the same — no crash diets, no nonsense, just real results built on real food and consistency.
