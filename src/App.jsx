@@ -207,7 +207,12 @@ function App() {
         )}
 
         {/* Main content */}
-        <main style={{ flex: 1, overflowY: 'auto', background: '#F7F3EE', WebkitOverflowScrolling: 'touch' }}>
+        <main style={{
+          flex: 1, minHeight: 0,
+          overflowY: activeTab === 'ai' ? 'hidden' : 'auto',
+          display: 'flex', flexDirection: 'column',
+          background: '#F7F3EE', WebkitOverflowScrolling: 'touch',
+        }}>
           {renderTab()}
         </main>
 

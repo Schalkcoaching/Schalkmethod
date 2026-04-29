@@ -100,7 +100,8 @@ export default function AICoach({ user, mobile }) {
   return (
     <div style={{
       display: 'flex', flexDirection: 'column',
-      height: mobile ? 'calc(100vh - 104px)' : 'calc(100vh - 48px)',
+      height: mobile ? '100%' : 'calc(100vh - 48px)',
+      minHeight: 0,
       background: '#F7F3EE', overflow: 'hidden',
     }}>
 
@@ -124,7 +125,7 @@ export default function AICoach({ user, mobile }) {
       </div>
 
       {/* Messages */}
-      <div style={{ flex: 1, overflowY: 'auto', padding: mobile ? '16px 14px' : '24px 32px', WebkitOverflowScrolling: 'touch' }}>
+      <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', padding: mobile ? '16px 14px' : '24px 32px', WebkitOverflowScrolling: 'touch' }}>
 
         {/* Empty state */}
         {isEmpty && (
