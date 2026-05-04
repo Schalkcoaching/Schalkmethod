@@ -267,66 +267,66 @@ export default function LandingPage({ onGetStarted, onSignIn }) {
 
       {/* Pricing */}
       <section style={{ padding: '64px 24px', background: '#0A0907' }}>
-        <div style={{ maxWidth: '680px', margin: '0 auto' }}>
+        <div style={{ maxWidth: '960px', margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '40px' }}>
             <h2 style={{ fontSize: '28px', fontWeight: 800, color: '#F7F3EE', margin: '0 0 12px', letterSpacing: '-0.5px' }}>Simple pricing</h2>
-            <p style={{ fontSize: '14px', color: '#6B5E54', margin: 0 }}>Start with the app or go all-in with full coaching.</p>
+            <p style={{ fontSize: '14px', color: '#6B5E54', margin: 0 }}>Start with the app or go all-in with coaching.</p>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '16px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px' }}>
 
             {/* App plan */}
-            <div style={{ background: '#141210', border: '1px solid #1E1A17', borderRadius: '20px', padding: '28px' }}>
+            <div style={{ background: '#141210', border: '1px solid #1E1A17', borderRadius: '20px', padding: '28px', display: 'flex', flexDirection: 'column' }}>
               <div style={{ fontSize: '12px', fontWeight: 700, color: '#6B5E54', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '16px' }}>TSM App</div>
-              <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', marginBottom: '4px' }}>
-                <div style={{ fontSize: '36px', fontWeight: 900, color: '#F7F3EE', lineHeight: 1 }}>R250</div>
-                <div style={{ fontSize: '16px', fontWeight: 600, color: '#5C5550' }}>/ $15</div>
-              </div>
+              <div style={{ fontSize: '36px', fontWeight: 900, color: '#F7F3EE', lineHeight: 1, marginBottom: '4px' }}>$15</div>
               <div style={{ fontSize: '12px', color: '#6B5E54', marginBottom: '24px' }}>per month · 7-day free trial</div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '28px' }}>
-                {['Full app access', 'Nutrition tracking', 'Workout logs', 'Progress photo uploads', 'Daily goal tracking', "Schalk's recipe library"].map(item => (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '28px', flex: 1 }}>
+                {['Full app access', 'Nutrition tracking', 'Workout logs', 'Progress photo uploads', 'Daily goal tracking', "Schalk's recipe library", 'AI Coach access'].map(item => (
                   <div key={item} style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '13px', color: '#9C8E84' }}>
                     <span style={{ color: '#C4A882', fontSize: '14px', flexShrink: 0 }}>✓</span>{item}
                   </div>
                 ))}
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                <a href="https://paystack.shop/pay/schalkmethod" target="_blank" rel="noreferrer"
-                  style={{ display: 'block', background: '#1E1A17', color: '#C4A882', border: '1px solid #2C2825', borderRadius: '10px', padding: '11px', textAlign: 'center', fontSize: '13px', fontWeight: 700, textDecoration: 'none' }}>
-                  Start Free Trial — R250/mo
-                </a>
-                <a href="https://paystack.shop/pay/schalkmethod-usd" target="_blank" rel="noreferrer"
-                  style={{ display: 'block', background: 'transparent', color: '#5C5550', border: '1px solid #2C2825', borderRadius: '10px', padding: '11px', textAlign: 'center', fontSize: '13px', fontWeight: 600, textDecoration: 'none' }}>
-                  Pay in USD — $15/mo
-                </a>
-              </div>
+              <a href="https://whop.com/the-schalk-method/tsm-app/" target="_blank" rel="noreferrer"
+                style={{ display: 'block', background: '#1E1A17', color: '#C4A882', border: '1px solid #2C2825', borderRadius: '10px', padding: '12px', textAlign: 'center', fontSize: '13px', fontWeight: 700, textDecoration: 'none' }}>
+                Start Free Trial — $15/mo
+              </a>
             </div>
 
-            {/* Coaching plan */}
-            <div style={{ background: '#1A1208', border: '1px solid #3D2E1A', borderRadius: '20px', padding: '28px', position: 'relative', overflow: 'hidden' }}>
-              <div style={{ position: 'absolute', top: '16px', right: '16px', background: '#C4A882', color: '#0F0D0B', fontSize: '9px', fontWeight: 800, padding: '3px 10px', borderRadius: '99px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Most Popular</div>
-              <div style={{ fontSize: '12px', fontWeight: 700, color: '#C4A882', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '16px' }}>1-on-1 Coaching</div>
-              <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', marginBottom: '4px' }}>
-                <div style={{ fontSize: '36px', fontWeight: 900, color: '#F7F3EE', lineHeight: 1 }}>R1750</div>
-                <div style={{ fontSize: '16px', fontWeight: 600, color: '#5C5550' }}>/ $100</div>
+            {/* Group Coaching */}
+            <div style={{ background: '#141210', border: '1px solid #2C2825', borderRadius: '20px', padding: '28px', display: 'flex', flexDirection: 'column' }}>
+              <div style={{ fontSize: '12px', fontWeight: 700, color: '#C4A882', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '16px' }}>Group Coaching</div>
+              <div style={{ fontSize: '36px', fontWeight: 900, color: '#F7F3EE', lineHeight: 1, marginBottom: '4px' }}>$35</div>
+              <div style={{ fontSize: '12px', color: '#6B5E54', marginBottom: '24px' }}>per month</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '28px', flex: 1 }}>
+                {['Everything in the App', 'Private group community', 'Weekly group coaching calls', 'Group accountability & support', 'Shared meal & workout ideas', 'Direct access to Schalk'].map(item => (
+                  <div key={item} style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '13px', color: '#9C8E84' }}>
+                    <span style={{ color: '#C4A882', fontSize: '14px', flexShrink: 0 }}>✓</span>{item}
+                  </div>
+                ))}
               </div>
-              <div style={{ fontSize: '12px', color: '#6B5E54', marginBottom: '24px' }}>per month · personalised</div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '28px' }}>
-                {['Everything in the App', 'Weekly video check-ins', 'Personalised meal plan', 'Custom workout programme', 'Direct coach messaging', 'Full accountability support'].map(item => (
+              <a href="https://whop.com/the-schalk-method/group-coaching-0c/" target="_blank" rel="noreferrer"
+                style={{ display: 'block', background: '#C4A882', color: '#0F0D0B', border: 'none', borderRadius: '10px', padding: '12px', textAlign: 'center', fontSize: '13px', fontWeight: 800, textDecoration: 'none' }}>
+                Join Group Coaching — $35/mo
+              </a>
+            </div>
+
+            {/* 1-on-1 Coaching */}
+            <div style={{ background: '#1A1208', border: '1px solid #3D2E1A', borderRadius: '20px', padding: '28px', position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+              <div style={{ position: 'absolute', top: '16px', right: '16px', background: '#C4A882', color: '#0F0D0B', fontSize: '9px', fontWeight: 800, padding: '3px 10px', borderRadius: '99px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Premium</div>
+              <div style={{ fontSize: '12px', fontWeight: 700, color: '#C4A882', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '16px' }}>1-on-1 Coaching</div>
+              <div style={{ fontSize: '36px', fontWeight: 900, color: '#F7F3EE', lineHeight: 1, marginBottom: '4px' }}>$140</div>
+              <div style={{ fontSize: '12px', color: '#6B5E54', marginBottom: '24px' }}>per month · fully personalised</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '28px', flex: 1 }}>
+                {['Everything in the App', 'Weekly 1-on-1 video check-ins', 'Personalised meal & lifestyle plan', 'Custom workout programme', 'Direct WhatsApp/message access', 'Full accountability & adjustments'].map(item => (
                   <div key={item} style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '13px', color: '#BEB5AE' }}>
                     <span style={{ color: '#C4A882', fontSize: '14px', flexShrink: 0 }}>✓</span>{item}
                   </div>
                 ))}
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                <a href="https://paystack.shop/pay/theschalkmethod" target="_blank" rel="noreferrer"
-                  style={{ display: 'block', background: '#C4A882', color: '#0F0D0B', border: 'none', borderRadius: '10px', padding: '11px', textAlign: 'center', fontSize: '13px', fontWeight: 800, textDecoration: 'none' }}>
-                  Apply for Coaching — R1750/mo
-                </a>
-                <a href="https://paystack.shop/pay/theschalkmethod-usd" target="_blank" rel="noreferrer"
-                  style={{ display: 'block', background: 'transparent', color: '#C4A882', border: '1px solid #3D2E1A', borderRadius: '10px', padding: '11px', textAlign: 'center', fontSize: '13px', fontWeight: 600, textDecoration: 'none' }}>
-                  Pay in USD — $100/mo
-                </a>
-              </div>
+              <a href="https://whop.com/the-schalk-method/1-on-1-coachingg/" target="_blank" rel="noreferrer"
+                style={{ display: 'block', background: '#C4A882', color: '#0F0D0B', border: 'none', borderRadius: '10px', padding: '12px', textAlign: 'center', fontSize: '13px', fontWeight: 800, textDecoration: 'none' }}>
+                Apply for Coaching — $140/mo
+              </a>
             </div>
 
           </div>
