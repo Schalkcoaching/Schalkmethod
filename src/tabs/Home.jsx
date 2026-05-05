@@ -41,6 +41,7 @@ const quickLinks = [
   { id: 'recipes',   label: 'Recipes',            icon: '👨‍🍳', color: '#92400E' },
   { id: 'workout',   label: 'Workout',            icon: '💪', color: '#1D4ED8' },
   { id: 'qa',        label: 'Ask Coach',          icon: '💬', color: '#6D28D9' },
+  { href: 'https://discord.gg/zhWcD8KUj', label: 'Community', icon: '🎮', color: '#5865F2' },
 ]
 
 function todayISO() {
@@ -125,15 +126,27 @@ export default function Home({ user, setActiveTab, mobile }) {
         <h2 style={{ fontSize: '11px', fontWeight: 700, color: '#9C8E84', marginBottom: '10px', textTransform: 'uppercase', letterSpacing: '1.5px' }}>Quick Access</h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
           {quickLinks.map(link => (
-            <button key={link.id} onClick={() => setActiveTab(link.id)} style={{
-              display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '6px',
-              padding: mobile ? '14px 8px' : '18px 12px',
-              background: '#FFFFFF', border: '1px solid #EDE8E0', borderRadius: '12px',
-              cursor: 'pointer', color: '#1A1410',
-            }}>
-              <span style={{ fontSize: mobile ? '22px' : '26px', width: mobile ? '38px' : '44px', height: mobile ? '38px' : '44px', background: link.color + '14', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{link.icon}</span>
-              <span style={{ fontSize: mobile ? '10px' : '11px', fontWeight: 600, color: '#4A3E35', textAlign: 'center', lineHeight: 1.3 }}>{link.label}</span>
-            </button>
+            link.href ? (
+              <a key={link.href} href={link.href} target="_blank" rel="noreferrer" style={{
+                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '6px',
+                padding: mobile ? '14px 8px' : '18px 12px',
+                background: '#FFFFFF', border: '1px solid #EDE8E0', borderRadius: '12px',
+                cursor: 'pointer', color: '#1A1410', textDecoration: 'none',
+              }}>
+                <span style={{ fontSize: mobile ? '22px' : '26px', width: mobile ? '38px' : '44px', height: mobile ? '38px' : '44px', background: link.color + '14', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{link.icon}</span>
+                <span style={{ fontSize: mobile ? '10px' : '11px', fontWeight: 600, color: '#4A3E35', textAlign: 'center', lineHeight: 1.3 }}>{link.label}</span>
+              </a>
+            ) : (
+              <button key={link.id} onClick={() => setActiveTab(link.id)} style={{
+                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '6px',
+                padding: mobile ? '14px 8px' : '18px 12px',
+                background: '#FFFFFF', border: '1px solid #EDE8E0', borderRadius: '12px',
+                cursor: 'pointer', color: '#1A1410',
+              }}>
+                <span style={{ fontSize: mobile ? '22px' : '26px', width: mobile ? '38px' : '44px', height: mobile ? '38px' : '44px', background: link.color + '14', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{link.icon}</span>
+                <span style={{ fontSize: mobile ? '10px' : '11px', fontWeight: 600, color: '#4A3E35', textAlign: 'center', lineHeight: 1.3 }}>{link.label}</span>
+              </button>
+            )
           ))}
         </div>
       </div>

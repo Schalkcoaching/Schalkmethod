@@ -52,7 +52,7 @@ const FOOD_LIBRARY = [
   { id: 'fillet',      name: 'Fillet / Tenderloin', category: 'Beef',         icon: '🥩', caloriesPer100: 215, unit: 'g', defaultAmount: 200, nutrients: { vit_b3: 0.7, vit_b6: 0.5, vit_b12: 0.8, choline: 0.4, iron: 0.5, zinc: 0.6, selenium: 0.6, phosphorus: 0.6 } },
   { id: 'brisket',     name: 'Brisket',             category: 'Beef',         icon: '🥩', caloriesPer100: 250, unit: 'g', defaultAmount: 200, nutrients: { vit_b3: 0.6, vit_b6: 0.4, vit_b12: 0.7, choline: 0.4, iron: 0.6, zinc: 0.6, selenium: 0.5 } },
   { id: 'ground_beef', name: 'Ground Beef (80/20)', category: 'Beef',         icon: '🥩', caloriesPer100: 254, unit: 'g', defaultAmount: 150, nutrients: { vit_b3: 0.6, vit_b6: 0.5, vit_b12: 0.8, choline: 0.5, iron: 0.6, zinc: 0.7, selenium: 0.5 } },
-  { id: 'beef_liver',  name: 'Beef Liver',          category: 'Beef',         icon: '🫀', caloriesPer100: 175, unit: 'g', defaultAmount: 25,  nutrients: { vit_a: 1, vit_b2: 1, vit_b3: 0.8, vit_b5: 0.9, vit_b6: 0.7, vit_b7: 0.6, vit_b9: 1, vit_b12: 1, choline: 1, copper: 1, iron: 0.9, zinc: 0.7, selenium: 0.8, cobalt: 0.9 } },
+  { id: 'beef_liver',  name: 'Beef Liver',          category: 'Beef',         icon: '🫀', caloriesPer100: 175, unit: 'g', defaultAmount: 25,  nutrients: { vit_a: 1, vit_b2: 1, vit_b3: 0.8, vit_b5: 0.9, vit_b6: 0.7, vit_b7: 0.65, vit_b9: 0.75, vit_b12: 1, choline: 0.8, copper: 1, iron: 0.85, zinc: 0.4, selenium: 0.75, cobalt: 0.9 } },
   { id: 'beef_heart',  name: 'Beef Heart',          category: 'Beef',         icon: '🫀', caloriesPer100: 112, unit: 'g', defaultAmount: 100, nutrients: { vit_b2: 0.6, vit_b3: 0.7, vit_b6: 0.5, vit_b12: 0.9, choline: 0.7, iron: 0.6, zinc: 0.7, selenium: 0.6, phosphorus: 0.6, coq10: 1 } },
   { id: 'beef_kidney', name: 'Beef Kidney',         category: 'Beef',         icon: '🫘', caloriesPer100: 99,  unit: 'g', defaultAmount: 100, nutrients: { vit_a: 0.7, vit_b2: 1, vit_b3: 0.7, vit_b5: 0.8, vit_b12: 1, vit_c: 0.4, selenium: 0.9, iron: 0.7, zinc: 0.6, copper: 0.7 } },
   { id: 'beef_tongue', name: 'Beef Tongue',         category: 'Beef',         icon: '🥩', caloriesPer100: 224, unit: 'g', defaultAmount: 100, nutrients: { vit_b2: 0.5, vit_b3: 0.5, vit_b12: 0.7, zinc: 0.6, iron: 0.5, choline: 0.5, selenium: 0.5 } },
@@ -68,13 +68,13 @@ const FOOD_LIBRARY = [
   { id: 'pork_belly',  name: 'Pork Belly',          category: 'Pork',         icon: '🥓', caloriesPer100: 518, unit: 'g', defaultAmount: 150, nutrients: { vit_b1: 0.7, vit_b3: 0.5, vit_b12: 0.5, selenium: 0.6, zinc: 0.4 } },
   { id: 'bacon',       name: 'Bacon',               category: 'Pork',         icon: '🥓', caloriesPer100: 540, unit: 'g', defaultAmount: 80,  nutrients: { vit_b1: 0.8, vit_b3: 0.7, vit_b12: 0.5, selenium: 0.7, phosphorus: 0.5 } },
   // ── Poultry ──
-  { id: 'chicken_breast', name: 'Chicken Breast',   category: 'Poultry',      icon: '🍗', caloriesPer100: 165, unit: 'g', defaultAmount: 200, nutrients: { vit_b3: 0.9, vit_b5: 0.5, vit_b6: 0.7, vit_b12: 0.4, selenium: 0.6, phosphorus: 0.5, choline: 0.4 } },
+  { id: 'chicken_breast', name: 'Chicken Breast',   category: 'Poultry',      icon: '🍗', caloriesPer100: 165, unit: 'g', defaultAmount: 200, nutrients: { vit_b3: 0.9, vit_b5: 0.5, vit_b6: 0.65, vit_b12: 0.25, selenium: 0.55, phosphorus: 0.5, choline: 0.35 } },
   { id: 'chicken_thigh',  name: 'Chicken Thigh',    category: 'Poultry',      icon: '🍗', caloriesPer100: 209, unit: 'g', defaultAmount: 180, nutrients: { vit_b3: 0.7, vit_b5: 0.5, vit_b6: 0.6, vit_b12: 0.5, selenium: 0.5, phosphorus: 0.5, choline: 0.4, zinc: 0.4 } },
   { id: 'turkey',      name: 'Turkey Breast',       category: 'Poultry',      icon: '🦃', caloriesPer100: 157, unit: 'g', defaultAmount: 200, nutrients: { vit_b3: 0.9, vit_b6: 0.7, vit_b12: 0.5, selenium: 0.7, zinc: 0.5, phosphorus: 0.5 } },
   { id: 'duck',        name: 'Duck',                category: 'Poultry',      icon: '🍗', caloriesPer100: 337, unit: 'g', defaultAmount: 180, nutrients: { vit_b3: 0.6, vit_b12: 0.6, iron: 0.6, zinc: 0.5, selenium: 0.5 } },
   { id: 'chicken_liver', name: 'Chicken Liver',     category: 'Poultry',      icon: '🫀', caloriesPer100: 172, unit: 'g', defaultAmount: 25,  nutrients: { vit_a: 0.8, vit_b2: 0.9, vit_b5: 0.8, vit_b9: 0.9, vit_b12: 1, choline: 0.9, copper: 0.7, iron: 0.8, selenium: 0.7 } },
   // ── Fish & Seafood ──
-  { id: 'salmon',      name: 'Salmon',              category: 'Fish & Seafood', icon: '🐟', caloriesPer100: 208, unit: 'g', defaultAmount: 180, nutrients: { vit_b2: 0.5, vit_b3: 0.8, vit_b5: 0.7, vit_b6: 0.7, vit_b12: 0.9, vit_d: 0.9, selenium: 0.8, phosphorus: 0.6, potassium: 0.5, iodine: 0.6 } },
+  { id: 'salmon',      name: 'Salmon',              category: 'Fish & Seafood', icon: '🐟', caloriesPer100: 208, unit: 'g', defaultAmount: 180, nutrients: { vit_b2: 0.45, vit_b3: 0.6, vit_b5: 0.65, vit_b6: 0.65, vit_b12: 0.9, vit_d: 0.85, selenium: 0.65, phosphorus: 0.6, potassium: 0.5, iodine: 0.55 } },
   { id: 'tuna',        name: 'Tuna (canned)',       category: 'Fish & Seafood', icon: '🐟', caloriesPer100: 132, unit: 'g', defaultAmount: 150, nutrients: { vit_b3: 0.9, vit_b6: 0.5, vit_b12: 0.9, vit_d: 0.6, selenium: 0.9, phosphorus: 0.5 } },
   { id: 'sardines',    name: 'Sardines',            category: 'Fish & Seafood', icon: '🐟', caloriesPer100: 208, unit: 'g', defaultAmount: 100, nutrients: { vit_b12: 0.8, vit_d: 0.7, calcium: 0.8, phosphorus: 0.7, selenium: 0.7, iodine: 0.7, cobalt: 0.6 } },
   { id: 'mackerel',    name: 'Mackerel',            category: 'Fish & Seafood', icon: '🐟', caloriesPer100: 205, unit: 'g', defaultAmount: 180, nutrients: { vit_b2: 0.5, vit_b3: 0.7, vit_b12: 0.9, vit_d: 0.8, selenium: 0.7, phosphorus: 0.6, iodine: 0.5 } },
@@ -82,7 +82,7 @@ const FOOD_LIBRARY = [
   { id: 'oysters',     name: 'Oysters',             category: 'Fish & Seafood', icon: '🦪', caloriesPer100: 68,  unit: 'g', defaultAmount: 100, nutrients: { vit_b12: 0.9, vit_d: 0.5, zinc: 1, copper: 0.9, iron: 0.7, selenium: 0.7, iodine: 0.8, cobalt: 0.8 } },
   { id: 'shrimp',      name: 'Shrimp',              category: 'Fish & Seafood', icon: '🦐', caloriesPer100: 99,  unit: 'g', defaultAmount: 150, nutrients: { vit_b12: 0.6, selenium: 0.8, iodine: 0.7, phosphorus: 0.5 } },
   // ── Eggs & Dairy ──
-  { id: 'eggs_whole',  name: 'Whole Eggs',          category: 'Eggs & Dairy',  icon: '🥚', caloriesPer100: 155, unit: 'g', defaultAmount: 110, countable: true, gramsPerUnit: 55, unitName: 'egg', nutrients: { vit_a: 0.5, vit_b2: 0.5, vit_b5: 0.5, vit_b7: 0.9, vit_b12: 0.5, vit_d: 0.5, vit_k2: 0.6, choline: 0.9, selenium: 0.6, cobalt: 0.5 } },
+  { id: 'eggs_whole',  name: 'Whole Eggs',          category: 'Eggs & Dairy',  icon: '🥚', caloriesPer100: 155, unit: 'g', defaultAmount: 110, countable: true, gramsPerUnit: 55, unitName: 'egg', nutrients: { vit_a: 0.4, vit_b2: 0.4, vit_b5: 0.5, vit_b7: 0.8, vit_b12: 0.45, vit_d: 0.15, vit_k2: 0.35, choline: 0.5, selenium: 0.55, cobalt: 0.4 } },
   { id: 'milk_whole',  name: 'Whole Milk',          category: 'Eggs & Dairy',  icon: '🥛', caloriesPer100: 61,  unit: 'ml', defaultAmount: 250, nutrients: { vit_a: 0.4, vit_b2: 0.6, vit_b12: 0.5, vit_d: 0.4, calcium: 0.8, phosphorus: 0.6, iodine: 0.7, potassium: 0.4 } },
   { id: 'greek_yogurt',name: 'Greek Yogurt',        category: 'Eggs & Dairy',  icon: '🥛', caloriesPer100: 59,  unit: 'g',  defaultAmount: 200, nutrients: { vit_b2: 0.5, vit_b12: 0.6, calcium: 0.7, phosphorus: 0.5, iodine: 0.6, potassium: 0.4 } },
   { id: 'kefir',       name: 'Kefir',               category: 'Eggs & Dairy',  icon: '🥛', caloriesPer100: 52,  unit: 'ml', defaultAmount: 250, nutrients: { vit_b2: 0.4, vit_b12: 0.5, calcium: 0.6, phosphorus: 0.5, potassium: 0.4, iodine: 0.4, vit_k2: 0.3 } },
@@ -303,8 +303,8 @@ export default function Nutrition({ user, mobile }) {
 
   const nutrientStatus = id => {
     const s = scores[id] || 0
-    if (s >= 0.7) return 'good'
-    if (s >= 0.35) return 'partial'
+    if (s >= 0.6) return 'good'
+    if (s >= 0.3) return 'partial'
     return 'low'
   }
 
@@ -346,7 +346,7 @@ export default function Nutrition({ user, mobile }) {
               <div>
                 <div style={{ fontSize: '11px', color: '#9C8E84', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px' }}>Overall Score</div>
                 <div style={{ fontSize: '22px', fontWeight: 800, color: '#1A1410' }}>{overallScore}%</div>
-                <div style={{ fontSize: '11px', color: '#BEB5AE', marginTop: '2px' }}>daily micronutrients</div>
+                <div style={{ fontSize: '11px', color: '#BEB5AE', marginTop: '2px' }}>aim for 60%+</div>
               </div>
             </div>
             <button onClick={() => setPanel(panel === 'vitamins' ? null : 'vitamins')} style={{ background: panel === 'vitamins' ? '#FFF7ED' : '#FFFFFF', border: panel === 'vitamins' ? '1px solid #FDBA74' : '1px solid #EDE8E0', borderRadius: '14px', padding: '20px', display: 'flex', alignItems: 'center', gap: '16px', cursor: 'pointer', textAlign: 'left', touchAction: 'manipulation' }}>
@@ -587,7 +587,7 @@ function NutrientPanel({ nutrients, scores, loggedFoodIds, expandedNutrient, set
                       )
                     })}
                   </div>
-                  {pct < 70 && sources.length > 0 && (
+                  {pct < 60 && sources.length > 0 && (
                     <div style={{ marginTop: '10px', fontSize: '11px', color: '#D97706', display: 'flex', alignItems: 'center', gap: '6px' }}>
                       <span>⚠️</span>
                       <span>Add more {sources.slice(0, 2).map(f => f.name).join(' or ')} to hit your target</span>
