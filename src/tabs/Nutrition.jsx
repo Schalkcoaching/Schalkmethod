@@ -208,6 +208,47 @@ export default function Nutrition({ user, mobile }) {
   const [expandedNutrient, setExpandedNutrient] = useState(null)
   const saveTimer = useRef(null)
   const isToday = selectedDate === todayLocal()
+  const [weekData, setWeekData] = useState([])
+
+  // Load last 7 days for the progress chart
+  useEffect(() => {
+    const loadWeek = async () => {
+      const today = new Date()
+      const days = Array.from({ length: 7 }, (_, i) => {
+        const d = new Date(today)
+        d.setDate(today.getDate() - (6 - i))
+        const off = d.getTimezoneOffset()
+        const iso = new Date(d.getTime() - off * 60000).toISOString().slice(0, 10)
+        return { iso, label: d.toLocaleDateString('en-US', { weekday: 'short' }) }
+      })
+      if (user) {
+        const { data: rows } = await supabase
+          .from('nutrition_logs')
+          .select('date, meals')
+          .eq('user_id', user.id)
+          .in('date', days.map(d => d.iso))
+        setWeekData(days.map(({ iso, label }) => {
+          const row = rows?.find(r => r.date === iso)
+          if (!row?.meals) return { iso, label, pct: null }
+          const scores = computeTotals(row.meals)
+          const avg = Math.round(ALL_NUTRIENTS.reduce((s, n) => s + (scores[n.id] || 0), 0) / ALL_NUTRIENTS.length * 100)
+          return { iso, label, pct: avg }
+        }))
+      } else {
+        setWeekData(days.map(({ iso, label }) => {
+          try {
+            const saved = localStorage.getItem(`tsm_nutrition_${iso}`)
+            if (!saved) return { iso, label, pct: null }
+            const dayData = JSON.parse(saved)
+            const scores = computeTotals(dayData.meals || {})
+            const avg = Math.round(ALL_NUTRIENTS.reduce((s, n) => s + (scores[n.id] || 0), 0) / ALL_NUTRIENTS.length * 100)
+            return { iso, label, pct: avg }
+          } catch { return { iso, label, pct: null } }
+        }))
+      }
+    }
+    loadWeek()
+  }, [user, selectedDate])
 
   // Load day data from Supabase
   useEffect(() => {
@@ -333,6 +374,9 @@ export default function Nutrition({ user, mobile }) {
           style={{ background: isToday ? 'transparent' : '#F7F3EE', border: `1px solid ${isToday ? 'transparent' : '#EDE8E0'}`, borderRadius: '8px', padding: '8px 16px', cursor: isToday ? 'default' : 'pointer', fontSize: '16px', color: isToday ? '#D8D0C5' : '#6B5E54', touchAction: 'manipulation', lineHeight: 1 }}
         >›</button>
       </div>
+
+      {/* Week progress chart */}
+      {weekData.length > 0 && <NutritionWeekChart data={weekData} selectedDate={selectedDate} onSelect={setSelectedDate} />}
 
       {loading ? (
         <div style={{ padding: '60px', textAlign: 'center', color: '#BEB5AE', fontSize: '14px' }}>Loading…</div>
@@ -664,6 +708,40 @@ function FoodPicker({ selectedIds, onAdd, mobile }) {
         {filtered.length === 0 && (
           <div style={{ gridColumn: '1/-1', padding: '24px', textAlign: 'center', color: '#BEB5AE', fontSize: '13px' }}>No foods match "{search}"</div>
         )}
+      </div>
+    </div>
+  )
+}
+
+function NutritionWeekChart({ data, selectedDate, onSelect }) {
+  const maxH = 56
+  return (
+    <div style={{ background: '#FFFFFF', border: '1px solid #EDE8E0', borderRadius: '16px', padding: '20px 24px', marginBottom: '16px', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
+      <h3 style={{ fontSize: '11px', fontWeight: 700, color: '#9C8E84', marginBottom: '18px', textTransform: 'uppercase', letterSpacing: '1.5px' }}>This Week — Tap a day to view</h3>
+      <div style={{ display: 'flex', alignItems: 'flex-end', gap: '6px' }}>
+        {data.map(({ iso, label, pct }) => {
+          const barH = pct !== null ? Math.max(4, Math.round((pct / 100) * maxH)) : 4
+          const isSelected = iso === selectedDate
+          return (
+            <div key={iso} onClick={() => onSelect(iso)} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', cursor: 'pointer' }}>
+              <div style={{ fontSize: '10px', fontWeight: 700, color: pct !== null ? '#1A1410' : '#D8D0C5' }}>
+                {pct !== null ? `${pct}%` : '–'}
+              </div>
+              <div style={{ width: '100%', height: `${maxH}px`, display: 'flex', alignItems: 'flex-end' }}>
+                <div style={{
+                  width: '100%', height: `${barH}px`, borderRadius: '5px 5px 3px 3px',
+                  background: pct === null ? '#F0EBE4'
+                    : pct >= 75 ? 'linear-gradient(180deg, #1C1917 0%, #7C5C3A 100%)'
+                    : pct >= 50 ? '#9C8E84' : '#D8D0C5',
+                  outline: isSelected ? '2px solid #1C1917' : 'none',
+                  outlineOffset: '2px',
+                  transition: 'height 0.4s ease',
+                }} />
+              </div>
+              <div style={{ fontSize: '10px', color: isSelected ? '#1C1917' : '#9C8E84', fontWeight: isSelected ? 800 : 400 }}>{label}</div>
+            </div>
+          )
+        })}
       </div>
     </div>
   )

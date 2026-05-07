@@ -27,6 +27,41 @@ export default function DailyGoals({ user, mobile }) {
   })
   const [customGoal, setCustomGoal] = useState('')
   const saveTimer = useRef(null)
+  const [weekData, setWeekData] = useState([])
+
+  // Load last 7 days for the progress chart
+  useEffect(() => {
+    const loadWeek = async () => {
+      const today = new Date()
+      const days = Array.from({ length: 7 }, (_, i) => {
+        const d = new Date(today)
+        d.setDate(today.getDate() - (6 - i))
+        const off = d.getTimezoneOffset()
+        const iso = new Date(d.getTime() - off * 60000).toISOString().slice(0, 10)
+        return { iso, dateStr: d.toDateString(), label: d.toLocaleDateString('en-US', { weekday: 'short' }) }
+      })
+      if (user) {
+        const { data } = await supabase
+          .from('daily_goals_log')
+          .select('date, completed, total')
+          .eq('user_id', user.id)
+          .in('date', days.map(d => d.iso))
+        setWeekData(days.map(({ iso, label }) => {
+          const row = data?.find(r => r.date === iso)
+          return { iso, label, pct: row ? Math.round((row.completed / (row.total || 1)) * 100) : null }
+        }))
+      } else {
+        setWeekData(days.map(({ iso, dateStr, label }) => {
+          try {
+            const checked = JSON.parse(localStorage.getItem(`coachpro_goals_${dateStr}`) || 'null')
+            const pct = checked ? Math.round(Object.values(checked).filter(Boolean).length / (goals.length || 1) * 100) : null
+            return { iso, label, pct }
+          } catch { return { iso, label, pct: null } }
+        }))
+      }
+    }
+    loadWeek()
+  }, [user])
 
   // Load today's checks from Supabase on mount
   useEffect(() => {
@@ -125,6 +160,9 @@ export default function DailyGoals({ user, mobile }) {
         </div>
       </div>
 
+      {/* Week chart */}
+      {weekData.length > 0 && <WeekChart data={weekData} />}
+
       {/* Goals list */}
       <div style={{ background: '#FFFFFF', border: '1px solid #EDE8E0', borderRadius: '16px', padding: '24px', marginBottom: '20px', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
         <h3 style={{ fontSize: '11px', fontWeight: 700, color: '#9C8E84', marginBottom: '16px', textTransform: 'uppercase', letterSpacing: '1.5px' }}>Today's Goals</h3>
@@ -163,6 +201,39 @@ export default function DailyGoals({ user, mobile }) {
             + Add Goal
           </button>
         </div>
+      </div>
+    </div>
+  )
+}
+
+function WeekChart({ data }) {
+  const maxH = 56
+  const todayIso = (() => { const d = new Date(); const off = d.getTimezoneOffset(); return new Date(d.getTime() - off * 60000).toISOString().slice(0, 10) })()
+  return (
+    <div style={{ background: '#FFFFFF', border: '1px solid #EDE8E0', borderRadius: '16px', padding: '20px 24px', marginBottom: '20px', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
+      <h3 style={{ fontSize: '11px', fontWeight: 700, color: '#9C8E84', marginBottom: '18px', textTransform: 'uppercase', letterSpacing: '1.5px' }}>This Week</h3>
+      <div style={{ display: 'flex', alignItems: 'flex-end', gap: '6px' }}>
+        {data.map(({ iso, label, pct }) => {
+          const barH = pct !== null ? Math.max(4, Math.round((pct / 100) * maxH)) : 4
+          const isToday = iso === todayIso
+          return (
+            <div key={iso} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
+              <div style={{ fontSize: '10px', fontWeight: 700, color: pct !== null ? '#1A1410' : '#D8D0C5' }}>
+                {pct !== null ? `${pct}%` : '–'}
+              </div>
+              <div style={{ width: '100%', height: `${maxH}px`, display: 'flex', alignItems: 'flex-end' }}>
+                <div style={{
+                  width: '100%', height: `${barH}px`, borderRadius: '5px 5px 3px 3px',
+                  background: pct === null ? '#F0EBE4'
+                    : pct >= 75 ? 'linear-gradient(180deg, #1C1917 0%, #7C5C3A 100%)'
+                    : pct >= 50 ? '#9C8E84' : '#D8D0C5',
+                  transition: 'height 0.4s ease',
+                }} />
+              </div>
+              <div style={{ fontSize: '10px', color: isToday ? '#1C1917' : '#9C8E84', fontWeight: isToday ? 800 : 400 }}>{label}</div>
+            </div>
+          )
+        })}
       </div>
     </div>
   )
