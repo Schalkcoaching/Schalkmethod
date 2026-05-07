@@ -186,7 +186,7 @@ export default function LandingPage({ onGetStarted, onSignIn, mobile }) {
       {openPolicy && <PolicyModal policy={POLICIES[openPolicy]} onClose={() => setOpenPolicy(null)} />}
 
       {/* Nav */}
-      <nav style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: mobile ? '14px 18px' : '18px 24px', borderBottom: '1px solid #1E1A17', position: 'sticky', top: 0, background: '#0F0D0B', zIndex: 50 }}>
+      <nav style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: mobile ? '14px 18px' : '18px 24px', paddingTop: mobile ? 'max(14px, env(safe-area-inset-top))' : '18px', borderBottom: '1px solid #1E1A17', position: 'sticky', top: 0, background: '#0F0D0B', zIndex: 50 }}>
         <div>
           <div style={{ fontSize: mobile ? '13px' : '15px', fontWeight: 800, color: '#F7F3EE', letterSpacing: '-0.3px' }}>The Schalk Method</div>
           <div style={{ fontSize: '9px', color: '#C4A882', fontWeight: 700, letterSpacing: '1.5px', textTransform: 'uppercase', marginTop: '1px' }}>Health Coaching</div>
