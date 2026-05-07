@@ -201,7 +201,7 @@ export default function LandingPage({ onGetStarted, onSignIn, mobile }) {
 
       {/* Hero */}
       <section style={{ padding: mobile ? '40px 20px 44px' : '72px 24px 64px', textAlign: 'center', maxWidth: '640px', margin: '0 auto' }}>
-        <div style={{ display: 'inline-block', background: 'rgba(196,168,130,0.12)', border: '1px solid rgba(196,168,130,0.25)', borderRadius: '99px', padding: '5px 14px', fontSize: '10px', fontWeight: 700, color: '#C4A882', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: mobile ? '20px' : '28px' }}>
+        <div style={{ display: 'inline-block', background: 'rgba(196,168,130,0.12)', border: '1px solid rgba(196,168,130,0.25)', borderRadius: '99px', padding: '5px 14px', fontSize: mobile ? '9px' : '11px', fontWeight: 700, color: '#C4A882', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: mobile ? '16px' : '28px', whiteSpace: 'nowrap' }}>
           Animal-Based · Faith-Driven · Results-Focused
         </div>
         <h1 style={{ fontSize: mobile ? '30px' : '40px', fontWeight: 900, color: '#F7F3EE', lineHeight: 1.1, margin: `0 0 ${mobile ? '14px' : '20px'}`, letterSpacing: mobile ? '-0.5px' : '-1px' }}>
@@ -228,11 +228,11 @@ export default function LandingPage({ onGetStarted, onSignIn, mobile }) {
       </section>
 
       {/* What's included */}
-      <section style={{ padding: '64px 24px', background: '#0A0907' }}>
+      <section style={{ padding: mobile ? '36px 18px' : '64px 24px', background: '#0A0907' }}>
         <div style={{ maxWidth: '700px', margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: '48px' }}>
-            <h2 style={{ fontSize: '28px', fontWeight: 800, color: '#F7F3EE', margin: '0 0 12px', letterSpacing: '-0.5px' }}>Everything you need, in one app</h2>
-            <p style={{ fontSize: '14px', color: '#6B5E54', margin: 0, lineHeight: 1.6 }}>Track your progress, follow your plan, and stay connected to your coach — all from your phone.</p>
+          <div style={{ textAlign: 'center', marginBottom: mobile ? '24px' : '48px' }}>
+            <h2 style={{ fontSize: mobile ? '22px' : '28px', fontWeight: 800, color: '#F7F3EE', margin: '0 0 10px', letterSpacing: '-0.5px' }}>Everything you need, in one app</h2>
+            <p style={{ fontSize: '13px', color: '#6B5E54', margin: 0, lineHeight: 1.6 }}>Track your progress, follow your plan, and stay connected to your coach — all from your phone.</p>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '14px' }}>
             {[
@@ -254,7 +254,7 @@ export default function LandingPage({ onGetStarted, onSignIn, mobile }) {
       </section>
 
       {/* About Schalk */}
-      <section style={{ padding: '64px 24px', maxWidth: '600px', margin: '0 auto', textAlign: 'center' }}>
+      <section style={{ padding: mobile ? '36px 18px' : '64px 24px', maxWidth: '600px', margin: '0 auto', textAlign: 'center' }}>
         <img src="/schalk.jpg" alt="Schalk Booysen" style={{ width: '120px', height: '120px', borderRadius: '50%', objectFit: 'cover', objectPosition: 'top', margin: '0 auto 20px', display: 'block', border: '3px solid #C4A882' }} />
         <h2 style={{ fontSize: '22px', fontWeight: 800, color: '#F7F3EE', margin: '0 0 16px', letterSpacing: '-0.3px' }}>About Schalk</h2>
         <p style={{ fontSize: '14px', color: '#9C8E84', lineHeight: 1.8, margin: '0 0 16px' }}>
@@ -266,10 +266,10 @@ export default function LandingPage({ onGetStarted, onSignIn, mobile }) {
       </section>
 
       {/* Pricing */}
-      <section style={{ padding: '64px 24px', background: '#0A0907' }}>
+      <section style={{ padding: mobile ? '36px 18px' : '64px 24px', background: '#0A0907' }}>
         <div style={{ maxWidth: '960px', margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-            <h2 style={{ fontSize: '28px', fontWeight: 800, color: '#F7F3EE', margin: '0 0 12px', letterSpacing: '-0.5px' }}>Simple pricing</h2>
+          <div style={{ textAlign: 'center', marginBottom: mobile ? '24px' : '40px' }}>
+            <h2 style={{ fontSize: mobile ? '22px' : '28px', fontWeight: 800, color: '#F7F3EE', margin: '0 0 10px', letterSpacing: '-0.5px' }}>Simple pricing</h2>
             <p style={{ fontSize: '14px', color: '#6B5E54', margin: 0 }}>Start with the app or go all-in with coaching.</p>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px' }}>
