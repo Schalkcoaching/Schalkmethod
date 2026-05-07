@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { supabase } from '../lib/supabase'
 
-export default function AuthScreen({ onAuth, onBack }) {
-  const [mode, setMode] = useState('login')
+export default function AuthScreen({ onBack, initialMode }) {
+  const [mode, setMode] = useState(initialMode === 'signup' ? 'signup' : 'login')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
@@ -104,10 +104,7 @@ export default function AuthScreen({ onAuth, onBack }) {
 
           <div style={{ marginTop: '24px', display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'center' }}>
             {mode !== 'login' && (
-              <button onClick={() => { setMode('login'); setError(''); setSuccess('') }} style={linkBtn}>Already have an account? Sign in</button>
-            )}
-            {mode === 'login' && (
-              <button onClick={() => { setMode('signup'); setError(''); setSuccess('') }} style={linkBtn}>New here? Create account</button>
+              <button onClick={() => { setMode('login'); setError(''); setSuccess('') }} style={linkBtn}>Back to sign in</button>
             )}
             {mode !== 'forgot' && (
               <button onClick={() => { setMode('forgot'); setError(''); setSuccess('') }} style={linkBtn}>Forgot password?</button>
@@ -192,10 +189,7 @@ export default function AuthScreen({ onAuth, onBack }) {
 
           <div style={{ marginTop: '24px', display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'center' }}>
             {mode !== 'login' && (
-              <button onClick={() => { setMode('login'); setError(''); setSuccess('') }} style={linkBtn}>Already have an account? Sign in</button>
-            )}
-            {mode === 'login' && (
-              <button onClick={() => { setMode('signup'); setError(''); setSuccess('') }} style={linkBtn}>New here? Create account</button>
+              <button onClick={() => { setMode('login'); setError(''); setSuccess('') }} style={linkBtn}>Back to sign in</button>
             )}
             {mode !== 'forgot' && (
               <button onClick={() => { setMode('forgot'); setError(''); setSuccess('') }} style={linkBtn}>Forgot password?</button>

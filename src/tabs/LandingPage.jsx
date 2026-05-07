@@ -227,6 +227,12 @@ export default function LandingPage({ onGetStarted, onSignIn, mobile }) {
             Sign In
           </button>
         </div>
+        <button
+          onClick={() => onSignIn('signup')}
+          style={{ background: 'none', border: 'none', color: '#5C5550', fontSize: '12px', cursor: 'pointer', marginTop: '16px', textDecoration: 'underline', touchAction: 'manipulation' }}
+        >
+          Already subscribed on Whop? Set up your account →
+        </button>
       </section>
 
       {/* What's included */}

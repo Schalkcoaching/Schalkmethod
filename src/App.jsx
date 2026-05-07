@@ -136,11 +136,11 @@ function App() {
   }
 
   if (!user) {
-    if (showAuth) return <AuthScreen onAuth={setUser} onBack={() => setShowAuth(false)} />
+    if (showAuth) return <AuthScreen initialMode={showAuth} onBack={() => setShowAuth(false)} />
     return (
       <LandingPage
         onGetStarted={() => setShowAuth(true)}
-        onSignIn={() => setShowAuth(true)}
+        onSignIn={(mode) => setShowAuth(mode || true)}
         mobile={windowWidth < 768}
       />
     )
