@@ -4,8 +4,9 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 // Map Whop product names → subscription tiers
 function getTier(productName: string): string {
   const name = (productName || '').toLowerCase()
-  if (name.includes('1-on-1') || name.includes('1on1') || name.includes('coaching')) return 'coaching'
   if (name.includes('group')) return 'group'
+  if (name.includes('1-on-1') || name.includes('1on1')) return 'coaching'
+  if (name.includes('coaching')) return 'coaching'
   return 'app'
 }
 
