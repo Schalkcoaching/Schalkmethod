@@ -207,7 +207,7 @@ export default function AICoach({ user, mobile }) {
             rows={1}
             style={{
               flex: 1, resize: 'none', border: '1px solid #EDE8E0', borderRadius: '14px',
-              padding: '12px 16px', fontSize: '14px', color: '#1A1410', background: '#F7F3EE',
+              padding: '12px 16px', fontSize: mobile ? '16px' : '14px', color: '#1A1410', background: '#F7F3EE',
               outline: 'none', fontFamily: 'inherit', lineHeight: 1.5,
               maxHeight: '120px', overflowY: 'auto',
             }}

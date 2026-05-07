@@ -177,53 +177,53 @@ function PolicyModal({ policy, onClose }) {
   )
 }
 
-export default function LandingPage({ onGetStarted, onSignIn }) {
+export default function LandingPage({ onGetStarted, onSignIn, mobile }) {
   const [openPolicy, setOpenPolicy] = useState(null)
 
   return (
-    <div style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', background: '#0F0D0B', minHeight: '100vh', color: '#F7F3EE' }}>
+    <div style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', background: '#0F0D0B', minHeight: '100vh', color: '#F7F3EE', overflowX: 'hidden' }}>
 
       {openPolicy && <PolicyModal policy={POLICIES[openPolicy]} onClose={() => setOpenPolicy(null)} />}
 
       {/* Nav */}
-      <nav style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '18px 24px', borderBottom: '1px solid #1E1A17', position: 'sticky', top: 0, background: '#0F0D0B', zIndex: 50 }}>
+      <nav style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: mobile ? '14px 18px' : '18px 24px', borderBottom: '1px solid #1E1A17', position: 'sticky', top: 0, background: '#0F0D0B', zIndex: 50 }}>
         <div>
-          <div style={{ fontSize: '15px', fontWeight: 800, color: '#F7F3EE', letterSpacing: '-0.3px' }}>The Schalk Method</div>
+          <div style={{ fontSize: mobile ? '13px' : '15px', fontWeight: 800, color: '#F7F3EE', letterSpacing: '-0.3px' }}>The Schalk Method</div>
           <div style={{ fontSize: '9px', color: '#C4A882', fontWeight: 700, letterSpacing: '1.5px', textTransform: 'uppercase', marginTop: '1px' }}>Health Coaching</div>
         </div>
         <button
           onClick={onSignIn}
-          style={{ background: 'transparent', border: '1px solid #2C2825', borderRadius: '8px', padding: '8px 18px', color: '#BEB5AE', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}
+          style={{ background: 'transparent', border: '1px solid #2C2825', borderRadius: '8px', padding: mobile ? '8px 14px' : '8px 18px', color: '#BEB5AE', fontSize: '13px', fontWeight: 600, cursor: 'pointer', touchAction: 'manipulation' }}
         >
           Sign In
         </button>
       </nav>
 
       {/* Hero */}
-      <section style={{ padding: '72px 24px 64px', textAlign: 'center', maxWidth: '640px', margin: '0 auto' }}>
-        <div style={{ display: 'inline-block', background: 'rgba(196,168,130,0.12)', border: '1px solid rgba(196,168,130,0.25)', borderRadius: '99px', padding: '5px 16px', fontSize: '11px', fontWeight: 700, color: '#C4A882', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '28px' }}>
+      <section style={{ padding: mobile ? '40px 20px 44px' : '72px 24px 64px', textAlign: 'center', maxWidth: '640px', margin: '0 auto' }}>
+        <div style={{ display: 'inline-block', background: 'rgba(196,168,130,0.12)', border: '1px solid rgba(196,168,130,0.25)', borderRadius: '99px', padding: '5px 14px', fontSize: '10px', fontWeight: 700, color: '#C4A882', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: mobile ? '20px' : '28px' }}>
           Animal-Based · Faith-Driven · Results-Focused
         </div>
-        <h1 style={{ fontSize: '40px', fontWeight: 900, color: '#F7F3EE', lineHeight: 1.1, margin: '0 0 20px', letterSpacing: '-1px' }}>
+        <h1 style={{ fontSize: mobile ? '30px' : '40px', fontWeight: 900, color: '#F7F3EE', lineHeight: 1.1, margin: `0 0 ${mobile ? '14px' : '20px'}`, letterSpacing: mobile ? '-0.5px' : '-1px' }}>
           Take control of your<br />
           <span style={{ color: '#C4A882' }}>health for good.</span>
         </h1>
-        <p style={{ fontSize: '16px', color: '#9C8E84', lineHeight: 1.7, margin: '0 0 40px' }}>
+        <p style={{ fontSize: mobile ? '14px' : '16px', color: '#9C8E84', lineHeight: 1.7, margin: `0 0 ${mobile ? '28px' : '40px'}` }}>
           The Schalk Method is a 1-on-1 health coaching programme built around real food, consistent habits, and personalised guidance — so you can look and feel your best, sustainably.
         </p>
-        <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', flexDirection: mobile ? 'column' : 'row', gap: '12px', justifyContent: 'center', alignItems: 'stretch' }}>
           <button
             onClick={onGetStarted}
-            style={{ background: '#C4A882', color: '#0F0D0B', border: 'none', borderRadius: '12px', padding: '14px 32px', fontSize: '14px', fontWeight: 800, cursor: 'pointer', letterSpacing: '-0.2px' }}
+            style={{ background: '#C4A882', color: '#0F0D0B', border: 'none', borderRadius: '12px', padding: '15px 32px', fontSize: '15px', fontWeight: 800, cursor: 'pointer', letterSpacing: '-0.2px', touchAction: 'manipulation' }}
           >
             Get Started
           </button>
-          <a
-            href="mailto:s_booysen@icloud.com?subject=Enquiry: The Schalk Method"
-            style={{ background: 'transparent', color: '#BEB5AE', border: '1px solid #2C2825', borderRadius: '12px', padding: '14px 32px', fontSize: '14px', fontWeight: 600, cursor: 'pointer', textDecoration: 'none', display: 'inline-block' }}
+          <button
+            onClick={onSignIn}
+            style={{ background: 'transparent', color: '#BEB5AE', border: '1px solid #2C2825', borderRadius: '12px', padding: '15px 32px', fontSize: '14px', fontWeight: 600, cursor: 'pointer', touchAction: 'manipulation' }}
           >
-            Ask a Question
-          </a>
+            Sign In
+          </button>
         </div>
       </section>
 

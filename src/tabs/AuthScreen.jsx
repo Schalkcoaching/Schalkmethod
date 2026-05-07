@@ -49,7 +49,7 @@ export default function AuthScreen({ onAuth, onBack }) {
 
   if (isMobile) {
     return (
-      <div style={{ minHeight: '100vh', background: '#F7F3EE', display: 'flex', flexDirection: 'column' }}>
+      <div style={{ minHeight: '100vh', background: '#F7F3EE', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
         {/* Mobile top branding bar */}
         <div style={{ background: '#1C1917', padding: '16px 24px 24px' }}>
           {onBack && <button onClick={onBack} style={{ background: 'none', border: 'none', color: '#5C5550', fontSize: '12px', cursor: 'pointer', padding: 0, marginBottom: '12px' }}>← Back</button>}
@@ -59,7 +59,7 @@ export default function AuthScreen({ onAuth, onBack }) {
         </div>
 
         {/* Mobile form */}
-        <div style={{ flex: 1, padding: '28px 24px', display: 'flex', flexDirection: 'column' }}>
+        <div style={{ flex: 1, padding: '28px 24px 48px', display: 'flex', flexDirection: 'column' }}>
           <h2 style={{ fontSize: '22px', fontWeight: 800, color: '#1A1410', marginBottom: '4px' }}>
             {mode === 'login' ? 'Sign in' : mode === 'signup' ? 'Create account' : 'Reset password'}
           </h2>
@@ -234,5 +234,5 @@ export default function AuthScreen({ onAuth, onBack }) {
 }
 
 const lbl = { fontSize: '11px', color: '#9C8E84', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'flex', flexDirection: 'column', gap: '6px' }
-const inp = { background: '#FAFAF8', border: '1px solid #E0D8CE', borderRadius: '8px', padding: '11px 14px', color: '#1A1410', fontSize: '14px', outline: 'none', width: '100%' }
+const inp = { background: '#FAFAF8', border: '1px solid #E0D8CE', borderRadius: '8px', padding: '11px 14px', color: '#1A1410', fontSize: '16px', outline: 'none', width: '100%' }
 const linkBtn = { background: 'none', border: 'none', cursor: 'pointer', fontSize: '13px', color: '#9C8E84', textDecoration: 'underline' }

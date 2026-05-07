@@ -138,6 +138,7 @@ function App() {
       <LandingPage
         onGetStarted={() => setShowAuth(true)}
         onSignIn={() => setShowAuth(true)}
+        mobile={windowWidth < 768}
       />
     )
   }
