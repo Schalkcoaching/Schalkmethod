@@ -15,7 +15,7 @@ import Paywall from './tabs/Paywall'
 import AICoach from './tabs/AICoach'
 
 function needsPaywall(profile) {
-  if (!profile) return false                         // still loading — don't flash paywall
+  if (!profile) return true                          // no profile = block (loading handled by profileLoading state)
   const status = profile.subscription_status
   if (!status) return true                           // no subscription = must subscribe via Whop
   if (status === 'active' || status === 'grandfathered' || status === 'cancelled') return false
