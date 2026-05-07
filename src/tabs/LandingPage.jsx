@@ -16,7 +16,7 @@ The Service is offered on a monthly subscription basis:
 - TSM App Plan: R200/month with a 7-day free trial
 - 1-on-1 Coaching Plan: R1500/month
 
-Subscriptions are billed monthly via Paystack. Your free trial begins on the date you sign up. You will not be charged during the trial period. After your trial ends, your selected plan will be billed automatically unless you cancel beforehand.
+Subscriptions are billed monthly via Whop. Your free trial begins on the date you sign up. You will not be charged during the trial period. After your trial ends, your selected plan will be billed automatically unless you cancel beforehand.
 
 4. CANCELLATION
 You may cancel your subscription at any time. Upon cancellation, you will retain access to the Service until the end of your current billing period. No partial refunds are issued for unused time within a billing cycle.
@@ -56,14 +56,14 @@ We collect the following information when you use our Service:
 - Health and fitness data: nutrition logs, workout records, daily goal completions, and body weight entries you choose to record
 - Progress photos: images you upload for your check-in tracking
 - AI coach conversations: messages exchanged with the TSM AI Coach
-- Payment information: handled entirely by Paystack — we do not store your card details
+- Payment information: handled entirely by Whop — we do not store your card details
 
 3. HOW WE USE YOUR INFORMATION
 Your data is used solely to:
 - Provide and personalise your coaching experience
 - Allow your coach to monitor your progress
 - Deliver AI-assisted health guidance within the app
-- Process subscription payments through Paystack
+- Process subscription payments through Whop
 - Communicate with you about your account
 
 4. DATA STORAGE AND SECURITY
@@ -72,7 +72,7 @@ Your data is stored securely using Supabase, a cloud infrastructure provider wit
 5. THIRD-PARTY SERVICES
 We use the following third-party services to operate the platform:
 - Supabase: secure database and authentication
-- Paystack: payment processing
+- Whop: payment processing and subscription management
 - Anthropic: AI coaching responses (messages are processed but not stored by Anthropic beyond the request)
 
 6. DATA RETENTION
@@ -149,7 +149,7 @@ TECHNICAL SUPPORT
 If you're experiencing issues with the app, email s_booysen@icloud.com with a description of the problem and your device/browser details.
 
 PAYSTACK PAYMENT SUPPORT
-For payment-related issues that require Paystack's direct assistance, visit paystack.com/support.`,
+For payment-related issues that require Whop's direct assistance, visit whop.com/support.`,
   },
 }
 
@@ -212,12 +212,14 @@ export default function LandingPage({ onGetStarted, onSignIn, mobile }) {
           The Schalk Method is a 1-on-1 health coaching programme built around real food, consistent habits, and personalised guidance — so you can look and feel your best, sustainably.
         </p>
         <div style={{ display: 'flex', flexDirection: mobile ? 'column' : 'row', gap: '12px', justifyContent: 'center', alignItems: 'stretch' }}>
-          <button
-            onClick={onGetStarted}
-            style={{ background: '#C4A882', color: '#0F0D0B', border: 'none', borderRadius: '12px', padding: '15px 32px', fontSize: '15px', fontWeight: 800, cursor: 'pointer', letterSpacing: '-0.2px', touchAction: 'manipulation' }}
+          <a
+            href="https://whop.com/the-schalk-method/tsm-app/"
+            target="_blank"
+            rel="noreferrer"
+            style={{ background: '#C4A882', color: '#0F0D0B', border: 'none', borderRadius: '12px', padding: '15px 32px', fontSize: '15px', fontWeight: 800, cursor: 'pointer', letterSpacing: '-0.2px', touchAction: 'manipulation', textDecoration: 'none', textAlign: 'center' }}
           >
             Get Started
-          </button>
+          </a>
           <button
             onClick={onSignIn}
             style={{ background: 'transparent', color: '#BEB5AE', border: '1px solid #2C2825', borderRadius: '12px', padding: '15px 32px', fontSize: '14px', fontWeight: 600, cursor: 'pointer', touchAction: 'manipulation' }}
