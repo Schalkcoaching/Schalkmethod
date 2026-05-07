@@ -6,7 +6,7 @@ const DEFAULT_GOALS = [
   { id: 2,  label: 'Complete workout',                        icon: '💪', category: 'Fitness' },
   { id: 4,  label: 'Get 7-8 hours of sleep',                 icon: '😴', category: 'Recovery' },
   { id: 8,  label: '10,000 steps',                           icon: '👟', category: 'Activity' },
-  { id: 9,  label: 'Hit 60% micronutrient goals',            icon: '🎯', category: 'Nutrition' },
+  { id: 9,  label: 'Hit 75% micronutrient target!',           icon: '🎯', category: 'Nutrition' },
   { id: 10, label: '30 minutes minimum of sunlight per day', icon: '☀️', category: 'Health' },
   { id: 11, label: 'No phone first 30 min of the day',       icon: '📵', category: 'Mindset' },
 ]
