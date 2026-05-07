@@ -20,9 +20,18 @@ export default function AuthScreen({ onAuth, onBack }) {
     setLoading(false)
     if (err) setError(err.message)
     else if (!keepSignedIn) {
-      // Mark as session-only — App.jsx will sign out on next fresh page load
       sessionStorage.setItem('tsm_session_active', 'true')
     }
+  }
+
+  const handleSignup = async () => {
+    if (!email || !password) return setError('Please fill in all fields.')
+    if (password.length < 6) return setError('Password must be at least 6 characters.')
+    setLoading(true); setError('')
+    const { error: err } = await supabase.auth.signUp({ email, password })
+    setLoading(false)
+    if (err) setError(err.message)
+    else setSuccess('Account created! Check your email to confirm, then sign in.')
   }
 
   const handleForgot = async () => {
@@ -48,10 +57,12 @@ export default function AuthScreen({ onAuth, onBack }) {
         {/* Mobile form */}
         <div style={{ flex: 1, padding: '28px 24px 48px', display: 'flex', flexDirection: 'column' }}>
           <h2 style={{ fontSize: '22px', fontWeight: 800, color: '#1A1410', marginBottom: '4px' }}>
-            {mode === 'login' ? 'Sign in' : 'Reset password'}
+            {mode === 'login' ? 'Sign in' : mode === 'signup' ? 'Create account' : 'Reset password'}
           </h2>
           <p style={{ fontSize: '13px', color: '#9C8E84', marginBottom: '24px' }}>
-            {mode === 'login' ? 'Enter your credentials to continue.' : "We'll send you a password reset link."}
+            {mode === 'login' ? 'Enter your credentials to continue.' :
+             mode === 'signup' ? 'Use the same email you subscribed with on Whop.' :
+             "We'll send you a password reset link."}
           </p>
 
           {error && (
@@ -83,26 +94,24 @@ export default function AuthScreen({ onAuth, onBack }) {
               </label>
             )}
             <button
-              onClick={mode === 'login' ? handleLogin : handleForgot}
+              onClick={mode === 'login' ? handleLogin : mode === 'signup' ? handleSignup : handleForgot}
               disabled={loading}
               style={{ background: '#1C1917', border: 'none', borderRadius: '12px', padding: '16px', color: '#F7F3EE', fontSize: '15px', fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.7 : 1, marginTop: '4px' }}
             >
-              {loading ? 'Please wait...' : mode === 'login' ? 'Sign In →' : 'Send Reset Link →'}
+              {loading ? 'Please wait...' : mode === 'login' ? 'Sign In →' : mode === 'signup' ? 'Create Account →' : 'Send Reset Link →'}
             </button>
           </div>
 
           <div style={{ marginTop: '24px', display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'center' }}>
             {mode !== 'login' && (
-              <button onClick={() => { setMode('login'); setError(''); setSuccess('') }} style={linkBtn}>Back to sign in</button>
+              <button onClick={() => { setMode('login'); setError(''); setSuccess('') }} style={linkBtn}>Already have an account? Sign in</button>
+            )}
+            {mode === 'login' && (
+              <button onClick={() => { setMode('signup'); setError(''); setSuccess('') }} style={linkBtn}>New here? Create account</button>
             )}
             {mode !== 'forgot' && (
               <button onClick={() => { setMode('forgot'); setError(''); setSuccess('') }} style={linkBtn}>Forgot password?</button>
             )}
-          </div>
-
-          <div style={{ marginTop: '28px', background: '#F0EBE4', borderRadius: '12px', padding: '14px 16px', textAlign: 'center' }}>
-            <div style={{ fontSize: '12px', color: '#6B5E54', marginBottom: '8px' }}>Don't have an account yet?</div>
-            <a href="https://whop.com/the-schalk-method/" target="_blank" rel="noreferrer" style={{ fontSize: '13px', fontWeight: 700, color: '#1C1917', textDecoration: 'none' }}>Subscribe on Whop to get access →</a>
           </div>
         </div>
       </div>
@@ -136,10 +145,12 @@ export default function AuthScreen({ onAuth, onBack }) {
       <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px' }}>
         <div style={{ width: '100%', maxWidth: '380px' }}>
           <h2 style={{ fontSize: '24px', fontWeight: 800, color: '#1A1410', marginBottom: '6px' }}>
-            {mode === 'login' ? 'Sign in' : 'Reset password'}
+            {mode === 'login' ? 'Sign in' : mode === 'signup' ? 'Create account' : 'Reset password'}
           </h2>
           <p style={{ fontSize: '14px', color: '#9C8E84', marginBottom: '32px' }}>
-            {mode === 'login' ? 'Enter your credentials to access your dashboard.' : "We'll send you a link to reset your password."}
+            {mode === 'login' ? 'Enter your credentials to access your dashboard.' :
+             mode === 'signup' ? 'Use the same email you subscribed with on Whop.' :
+             "We'll send you a link to reset your password."}
           </p>
 
           {error && (
@@ -171,26 +182,24 @@ export default function AuthScreen({ onAuth, onBack }) {
               </label>
             )}
             <button
-              onClick={mode === 'login' ? handleLogin : handleForgot}
+              onClick={mode === 'login' ? handleLogin : mode === 'signup' ? handleSignup : handleForgot}
               disabled={loading}
               style={{ background: '#1C1917', border: 'none', borderRadius: '10px', padding: '14px', color: '#F7F3EE', fontSize: '14px', fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.7 : 1, marginTop: '4px' }}
             >
-              {loading ? 'Please wait...' : mode === 'login' ? 'Sign In →' : 'Send Reset Link →'}
+              {loading ? 'Please wait...' : mode === 'login' ? 'Sign In →' : mode === 'signup' ? 'Create Account →' : 'Send Reset Link →'}
             </button>
           </div>
 
           <div style={{ marginTop: '24px', display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'center' }}>
             {mode !== 'login' && (
-              <button onClick={() => { setMode('login'); setError(''); setSuccess('') }} style={linkBtn}>Back to sign in</button>
+              <button onClick={() => { setMode('login'); setError(''); setSuccess('') }} style={linkBtn}>Already have an account? Sign in</button>
+            )}
+            {mode === 'login' && (
+              <button onClick={() => { setMode('signup'); setError(''); setSuccess('') }} style={linkBtn}>New here? Create account</button>
             )}
             {mode !== 'forgot' && (
               <button onClick={() => { setMode('forgot'); setError(''); setSuccess('') }} style={linkBtn}>Forgot password?</button>
             )}
-          </div>
-
-          <div style={{ marginTop: '28px', background: '#F7F3EE', borderRadius: '12px', padding: '14px 16px', textAlign: 'center' }}>
-            <div style={{ fontSize: '12px', color: '#6B5E54', marginBottom: '8px' }}>Don't have an account yet?</div>
-            <a href="https://whop.com/the-schalk-method/" target="_blank" rel="noreferrer" style={{ fontSize: '13px', fontWeight: 700, color: '#1C1917', textDecoration: 'none' }}>Subscribe on Whop to get access →</a>
           </div>
         </div>
       </div>
