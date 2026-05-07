@@ -15,14 +15,14 @@ import Paywall from './tabs/Paywall'
 import AICoach from './tabs/AICoach'
 
 function needsPaywall(profile) {
-  if (!profile) return false
+  if (!profile) return false                         // still loading — don't flash paywall
   const status = profile.subscription_status
-  if (!status) return false                          // no column yet — let them in
+  if (!status) return true                           // no subscription = must subscribe via Whop
   if (status === 'active' || status === 'grandfathered' || status === 'cancelled') return false
   if (status === 'trial') {
     const ends = profile.trial_ends_at ? new Date(profile.trial_ends_at) : null
     if (!ends) return false
-    return new Date() > ends                         // trial expired
+    return new Date() > ends
   }
   return status === 'expired' || status === 'inactive'
 }
@@ -83,13 +83,16 @@ function CoachingUpsell({ user, mobile }) {
 function App() {
   const [user, setUser] = useState(undefined)
   const [profile, setProfile] = useState(null)
+  const [profileLoading, setProfileLoading] = useState(false)
   const [activeTab, setActiveTab] = useState('home')
   const [windowWidth, setWindowWidth] = useState(window.innerWidth)
   const [showAuth, setShowAuth] = useState(false)
 
   const fetchProfile = async (uid) => {
+    setProfileLoading(true)
     const { data } = await supabase.from('profiles').select('*').eq('id', uid).single()
     setProfile(data || null)
+    setProfileLoading(false)
   }
 
   useEffect(() => {
@@ -121,7 +124,7 @@ function App() {
     setShowAuth(false)
   }
 
-  if (user === undefined) {
+  if (user === undefined || profileLoading) {
     return (
       <div style={{ display: 'flex', height: '100vh', alignItems: 'center', justifyContent: 'center', background: '#F7F3EE' }}>
         <div style={{ textAlign: 'center' }}>
@@ -150,13 +153,6 @@ function App() {
     return <Paywall user={user} profile={profile} mobile={windowWidth < 768} />
   }
 
-  // Trial countdown banner state (shown inside app while trial is still active)
-  const trialDaysLeft = (() => {
-    if (!profile?.trial_ends_at || profile?.subscription_status !== 'trial') return null
-    const diff = new Date(profile.trial_ends_at) - new Date()
-    const days = Math.ceil(diff / (1000 * 60 * 60 * 24))
-    return days > 0 ? days : null
-  })()
   const tabs = coach ? coachTabs : clientTabs
   const isMobile = windowWidth < 768
   const hasCoachingAccess = coach || ['coaching', 'grandfathered', 'coach'].includes(profile?.subscription_tier)
@@ -199,13 +195,6 @@ function App() {
           </div>
         </div>
 
-        {/* Trial banner */}
-        {trialDaysLeft && (
-          <div style={{ background: '#FEF3C7', borderBottom: '1px solid #FDE68A', padding: '6px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
-            <span style={{ fontSize: '11px', fontWeight: 600, color: '#92400E' }}>⏳ {trialDaysLeft} day{trialDaysLeft === 1 ? '' : 's'} left on your free trial</span>
-            <a href={`https://paystack.shop/pay/schalkmethod`} target="_blank" rel="noreferrer" style={{ fontSize: '11px', fontWeight: 700, color: '#92400E', textDecoration: 'underline' }}>Subscribe</a>
-          </div>
-        )}
 
         {/* Main content */}
         <main style={{
@@ -313,12 +302,6 @@ function App() {
 
       {/* Main content */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden' }}>
-        {trialDaysLeft && (
-          <div style={{ background: '#FEF3C7', borderBottom: '1px solid #FDE68A', padding: '7px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
-            <span style={{ fontSize: '12px', fontWeight: 600, color: '#92400E' }}>⏳ {trialDaysLeft} day{trialDaysLeft === 1 ? '' : 's'} left on your free trial</span>
-            <a href={`https://paystack.shop/pay/schalkmethod`} target="_blank" rel="noreferrer" style={{ fontSize: '12px', fontWeight: 700, color: '#92400E', textDecoration: 'underline' }}>Subscribe now →</a>
-          </div>
-        )}
         <main style={{ flex: 1, overflowY: 'auto', background: '#F7F3EE' }}>
           {renderTab()}
         </main>
