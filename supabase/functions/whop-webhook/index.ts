@@ -30,47 +30,46 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
     )
 
-    // Look up Supabase user by email
-    const { data: { users }, error: listErr } = await supabase.auth.admin.listUsers()
-    if (listErr) throw listErr
+    const normalizedEmail = email.toLowerCase()
 
-    const authUser = users.find((u: any) => u.email?.toLowerCase() === email.toLowerCase())
+    // Look up user by email in profiles table (more reliable than listUsers)
+    const { data: existingProfile } = await supabase
+      .from('profiles')
+      .select('id')
+      .eq('email', normalizedEmail)
+      .maybeSingle()
 
     if (action === 'membership.went_valid') {
       const tier = getTier(productName)
 
-      if (authUser) {
-        // User exists — activate their profile
-        const { error } = await supabase.from('profiles').upsert({
-          id: authUser.id,
+      if (existingProfile?.id) {
+        // User has an app account — activate them immediately
+        const { error } = await supabase.from('profiles').update({
           subscription_status: 'active',
           subscription_tier: tier,
           whop_membership_id: data?.id ?? null,
-        }, { onConflict: 'id' })
+        }).eq('id', existingProfile.id)
         if (error) throw error
-        console.log(`✓ Activated: ${email} → ${tier}`)
+        console.log(`✓ Activated: ${normalizedEmail} → ${tier}`)
       } else {
-        // User hasn't signed up yet — store pending activation
+        // No app account yet — store pending activation for when they sign up
         const { error } = await supabase.from('pending_activations').upsert({
-          email: email.toLowerCase(),
+          email: normalizedEmail,
           subscription_status: 'active',
           subscription_tier: tier,
           whop_membership_id: data?.id ?? null,
         }, { onConflict: 'email' })
-        if (error) {
-          // Table might not exist yet — log and continue
-          console.warn('pending_activations insert failed:', error.message)
-        }
-        console.log(`⏳ Pending: ${email} subscribed but no app account yet`)
+        if (error) console.warn('pending_activations insert failed:', error.message)
+        console.log(`⏳ Pending: ${normalizedEmail} subscribed but no app account yet`)
       }
     }
 
     if (action === 'membership.went_invalid') {
-      if (authUser) {
+      if (existingProfile?.id) {
         await supabase.from('profiles').update({
           subscription_status: 'expired',
-        }).eq('id', authUser.id)
-        console.log(`✓ Expired: ${email}`)
+        }).eq('id', existingProfile.id)
+        console.log(`✓ Expired: ${normalizedEmail}`)
       }
     }
 
