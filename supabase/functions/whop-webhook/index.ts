@@ -18,10 +18,11 @@ serve(async (req) => {
     // Log full payload so we can debug what Whop actually sends
     console.log('Whop webhook received:', JSON.stringify(payload))
 
-    const action = payload.action ?? payload.event ?? payload.type ?? ''
+    const action = payload.type ?? payload.action ?? payload.event ?? ''
     const data   = payload.data ?? payload
     const email  = data?.user?.email ?? data?.email ?? payload?.user?.email
-    const productName = data?.product?.name ?? data?.plan?.name ?? data?.product_name ?? ''
+    // Whop uses "title" not "name" for products
+    const productName = data?.product?.title ?? data?.product?.name ?? data?.plan?.name ?? data?.plan?.title ?? ''
 
     console.log(`Action: ${action}, Email: ${email}, Product: ${productName}`)
 
@@ -43,6 +44,7 @@ serve(async (req) => {
       action.includes('created') ||
       data?.valid === true ||
       data?.status === 'active' ||
+      data?.status === 'trialing' ||
       data?.status === 'completed'
     )
     const isExpiry = (
