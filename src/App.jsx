@@ -90,9 +90,8 @@ function App() {
 
   const fetchProfile = async (uid) => {
     setProfileLoading(true)
-    // Always check for a pending Whop activation first — covers the case where
-    // the webhook fired after the account was created (timing gap in the trigger).
-    await supabase.rpc('apply_pending_activation')
+    // Guarantee profile exists + apply any pending Whop activation in one call
+    await supabase.rpc('ensure_profile_and_activate')
     const { data } = await supabase.from('profiles').select('*').eq('id', uid).single()
     setProfile(data || null)
     setProfileLoading(false)
