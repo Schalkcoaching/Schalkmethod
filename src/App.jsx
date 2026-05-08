@@ -159,7 +159,7 @@ function App() {
 
   // Show paywall for non-coach users whose trial/subscription has expired
   if (!coach && needsPaywall(profile)) {
-    return <Paywall user={user} profile={profile} mobile={windowWidth < 768} onSignOut={handleSignOut} onRefresh={() => refreshActivation(user.id)} />
+    return <Paywall user={user} profile={profile} mobile={windowWidth < 768} onSignOut={handleSignOut} />
   }
 
   const tabs = coach ? coachTabs : clientTabs

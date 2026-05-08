@@ -1,32 +1,26 @@
-import { useState } from 'react'
-
 const BUY_LINKS = {
   app:      'https://whop.com/the-schalk-method/tsm-app/',
   group:    'https://whop.com/the-schalk-method/group-coaching-0c/',
   coaching: 'https://whop.com/the-schalk-method/1-on-1-coachingg/',
 }
 
-export default function Paywall({ user, profile, mobile, onSignOut, onRefresh }) {
-  const [refreshing, setRefreshing] = useState(false)
-  const [refreshed, setRefreshed] = useState(false)
-
+export default function Paywall({ user, profile, mobile, onSignOut }) {
   const goTo = (key) => window.open(BUY_LINKS[key], '_blank')
-
-  const handleRefresh = async () => {
-    setRefreshing(true)
-    await onRefresh?.()
-    setRefreshing(false)
-    setRefreshed(true)
-    setTimeout(() => setRefreshed(false), 3000)
-  }
 
   return (
     <div style={{ minHeight: '100vh', background: '#F7F3EE', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
 
       {/* Top bar */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: mobile ? '14px 18px' : '18px 32px', borderBottom: '1px solid #EDE8E0', background: '#F7F3EE', flexShrink: 0 }}>
+      <div style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        padding: mobile ? '14px 18px' : '18px 32px',
+        borderBottom: '1px solid #EDE8E0', background: '#F7F3EE', flexShrink: 0,
+      }}>
         <div style={{ fontSize: '13px', fontWeight: 800, color: '#1A1410' }}>The Schalk Method</div>
-        <button onClick={onSignOut} style={{ background: 'transparent', border: '1px solid #E0D8CE', borderRadius: '8px', padding: '6px 14px', fontSize: '12px', color: '#9C8E84', cursor: 'pointer', fontWeight: 600 }}>
+        <button onClick={onSignOut} style={{
+          background: 'transparent', border: '1px solid #E0D8CE', borderRadius: '8px',
+          padding: '6px 14px', fontSize: '12px', color: '#9C8E84', cursor: 'pointer', fontWeight: 600,
+        }}>
           Sign Out
         </button>
       </div>
@@ -34,22 +28,36 @@ export default function Paywall({ user, profile, mobile, onSignOut, onRefresh })
       {/* Content */}
       <div style={{ flex: 1, padding: mobile ? '28px 18px 48px' : '48px 40px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
 
-        <div style={{ fontSize: mobile ? '22px' : '26px', fontWeight: 900, color: '#1A1410', letterSpacing: '-0.5px', marginBottom: '6px', textAlign: 'center' }}>
-          Choose a plan to get access
-        </div>
-        <div style={{ fontSize: '13px', color: '#9C8E84', marginBottom: '28px', textAlign: 'center' }}>
-          Subscribe on Whop, then come back and refresh below.
+        <div style={{ fontSize: mobile ? '22px' : '26px', fontWeight: 900, color: '#1A1410', letterSpacing: '-0.5px', marginBottom: '8px', textAlign: 'center' }}>
+          Subscribe to get access
         </div>
 
-        {/* Already subscribed refresh */}
-        <button
-          onClick={handleRefresh}
-          disabled={refreshing}
-          style={{ background: '#1C1917', border: 'none', borderRadius: '12px', padding: '13px 28px', color: '#F7F3EE', fontSize: '13px', fontWeight: 700, cursor: refreshing ? 'not-allowed' : 'pointer', opacity: refreshing ? 0.7 : 1, marginBottom: '32px' }}
-        >
-          {refreshing ? 'Checking...' : refreshed ? '✓ Checked — if you subscribed, sign out and back in' : "I've subscribed on Whop — refresh access"}
-        </button>
+        {/* Step-by-step instructions */}
+        <div style={{
+          background: '#FFFFFF', border: '1px solid #EDE8E0', borderRadius: '16px',
+          padding: '20px 24px', marginBottom: '28px', width: '100%', maxWidth: '480px',
+        }}>
+          <div style={{ fontSize: '11px', fontWeight: 700, color: '#9C8E84', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '14px' }}>
+            How to get access
+          </div>
+          {[
+            { n: '1', text: 'Choose a plan below and subscribe on Whop' },
+            { n: '2', text: 'Sign out of the app (button top right)' },
+            { n: '3', text: 'Sign up again using the exact same email you used on Whop' },
+            { n: '4', text: 'You\'re in — the system recognises your subscription automatically' },
+          ].map(({ n, text }) => (
+            <div key={n} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', marginBottom: '10px' }}>
+              <div style={{
+                width: '22px', height: '22px', borderRadius: '50%', background: '#1C1917',
+                color: '#F7F3EE', fontSize: '11px', fontWeight: 700, display: 'flex',
+                alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '1px',
+              }}>{n}</div>
+              <div style={{ fontSize: '13px', color: '#4A3F35', lineHeight: 1.5 }}>{text}</div>
+            </div>
+          ))}
+        </div>
 
+        {/* Plans */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', width: '100%', maxWidth: '480px' }}>
 
           {/* App Plan */}

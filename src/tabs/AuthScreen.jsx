@@ -61,9 +61,15 @@ export default function AuthScreen({ onBack, initialMode }) {
           </h2>
           <p style={{ fontSize: '13px', color: '#9C8E84', marginBottom: '24px' }}>
             {mode === 'login' ? 'Enter your credentials to continue.' :
-             mode === 'signup' ? 'Use the same email you subscribed with on Whop.' :
+             mode === 'signup' ? 'Use the exact same email you subscribed with on Whop.' :
              "We'll send you a password reset link."}
           </p>
+
+          {mode === 'signup' && (
+            <div style={{ background: '#FFF8EE', border: '1px solid #F0DDB8', borderRadius: '10px', padding: '12px 16px', marginBottom: '4px', fontSize: '13px', color: '#7A5C2E', lineHeight: 1.5 }}>
+              ⚠️ <strong>Important:</strong> Use the exact email you used when subscribing on Whop. The system uses this to activate your account automatically.
+            </div>
+          )}
 
           {error && (
             <div style={{ background: '#FEF2F2', border: '1px solid #FECACA', borderRadius: '10px', padding: '12px 16px', marginBottom: '16px', fontSize: '13px', color: '#DC2626' }}>
@@ -146,9 +152,15 @@ export default function AuthScreen({ onBack, initialMode }) {
           </h2>
           <p style={{ fontSize: '14px', color: '#9C8E84', marginBottom: '32px' }}>
             {mode === 'login' ? 'Enter your credentials to access your dashboard.' :
-             mode === 'signup' ? 'Use the same email you subscribed with on Whop.' :
+             mode === 'signup' ? 'Use the exact same email you subscribed with on Whop.' :
              "We'll send you a link to reset your password."}
           </p>
+
+          {mode === 'signup' && (
+            <div style={{ background: '#FFF8EE', border: '1px solid #F0DDB8', borderRadius: '10px', padding: '12px 16px', marginBottom: '4px', fontSize: '13px', color: '#7A5C2E', lineHeight: 1.5 }}>
+              ⚠️ <strong>Important:</strong> Use the exact email you used when subscribing on Whop. The system uses this to activate your account automatically.
+            </div>
+          )}
 
           {error && (
             <div style={{ background: '#FEF2F2', border: '1px solid #FECACA', borderRadius: '10px', padding: '12px 16px', marginBottom: '16px', fontSize: '13px', color: '#DC2626' }}>
