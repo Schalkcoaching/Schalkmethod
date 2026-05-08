@@ -43,7 +43,7 @@ export default function Paywall({ user, profile, mobile, onSignOut }) {
           {[
             { n: '1', text: 'Choose a plan below and subscribe on Whop' },
             { n: '2', text: 'Sign out of the app (button top right)' },
-            { n: '3', text: 'Sign up again using the exact same email you used on Whop' },
+            { n: '3', text: 'No account yet? Sign up with your Whop email. Already have one? Just sign in.' },
             { n: '4', text: 'You\'re in — the system recognises your subscription automatically' },
           ].map(({ n, text }) => (
             <div key={n} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', marginBottom: '10px' }}>

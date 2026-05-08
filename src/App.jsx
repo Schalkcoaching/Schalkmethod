@@ -90,18 +90,12 @@ function App() {
 
   const fetchProfile = async (uid) => {
     setProfileLoading(true)
+    // Always check for a pending Whop activation first — covers the case where
+    // the webhook fired after the account was created (timing gap in the trigger).
+    await supabase.rpc('apply_pending_activation')
     const { data } = await supabase.from('profiles').select('*').eq('id', uid).single()
     setProfile(data || null)
     setProfileLoading(false)
-  }
-
-  // Called by Paywall "I've subscribed" button — applies any pending Whop activation
-  // then re-fetches the profile so the user gets through without signing out/in.
-  const refreshActivation = async (uid) => {
-    // Try to apply a pending activation stored by the Whop webhook
-    await supabase.rpc('apply_pending_activation')
-    // Always re-fetch so the UI reflects the latest DB state
-    await fetchProfile(uid)
   }
 
   useEffect(() => {
