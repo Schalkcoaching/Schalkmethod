@@ -95,6 +95,15 @@ function App() {
     setProfileLoading(false)
   }
 
+  // Called by Paywall "I've subscribed" button — applies any pending Whop activation
+  // then re-fetches the profile so the user gets through without signing out/in.
+  const refreshActivation = async (uid) => {
+    // Try to apply a pending activation stored by the Whop webhook
+    await supabase.rpc('apply_pending_activation')
+    // Always re-fetch so the UI reflects the latest DB state
+    await fetchProfile(uid)
+  }
+
   useEffect(() => {
     supabase.auth.getSession().then(async ({ data: { session } }) => {
       if (session && localStorage.getItem('tsm_keep_signed_in') === 'false' && !sessionStorage.getItem('tsm_session_active')) {
@@ -150,7 +159,7 @@ function App() {
 
   // Show paywall for non-coach users whose trial/subscription has expired
   if (!coach && needsPaywall(profile)) {
-    return <Paywall user={user} profile={profile} mobile={windowWidth < 768} onSignOut={handleSignOut} onRefresh={() => fetchProfile(user.id)} />
+    return <Paywall user={user} profile={profile} mobile={windowWidth < 768} onSignOut={handleSignOut} onRefresh={() => refreshActivation(user.id)} />
   }
 
   const tabs = coach ? coachTabs : clientTabs
