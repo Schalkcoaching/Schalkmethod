@@ -50,9 +50,15 @@ serve(async (req) => {
       action.includes('expir') ||
       action.includes('cancel') ||
       action.includes('revok') ||
+      action.includes('delet') ||
+      action.includes('terminat') ||
+      action.includes('banned') ||
       data?.valid === false ||
       data?.status === 'expired' ||
-      data?.status === 'canceled'
+      data?.status === 'canceled' ||
+      data?.status === 'cancelled' ||
+      data?.status === 'invalid' ||
+      data?.status === 'revoked'
     )
 
     if (!isActivation && !isExpiry) {
