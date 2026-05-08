@@ -48,6 +48,7 @@ serve(async (req) => {
       data?.status === 'completed'
     )
     const isExpiry = (
+      action.includes('deactivat') ||
       action.includes('invalid') ||
       action.includes('expir') ||
       action.includes('cancel') ||
@@ -60,7 +61,8 @@ serve(async (req) => {
       data?.status === 'canceled' ||
       data?.status === 'cancelled' ||
       data?.status === 'invalid' ||
-      data?.status === 'revoked'
+      data?.status === 'revoked' ||
+      data?.status === 'inactive'
     )
 
     if (!isActivation && !isExpiry) {
