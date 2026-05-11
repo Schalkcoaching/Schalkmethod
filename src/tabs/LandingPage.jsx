@@ -248,12 +248,14 @@ export default function LandingPage({ onGetStarted, onSignIn, mobile }) {
               { icon: '💪', title: 'Workout Logs', desc: 'Follow your personalised programme and track every session as you go.' },
               { icon: '📸', title: 'Progress Photos', desc: 'Upload weekly check-in photos to see your transformation side by side.' },
               { icon: '✅', title: 'Daily Goals', desc: 'Build the habits that matter — tracked daily, every single day.' },
+              { icon: '🤖', title: 'AI Coach', desc: 'Get instant answers about your nutrition, training, and habits — 24/7, trained on the TSM method.', highlight: true },
               { icon: '💬', title: 'Ask Your Coach', desc: 'Message Schalk directly with questions and get honest, no-fluff answers.' },
               { icon: '📹', title: 'Video Sessions', desc: 'Book and join your weekly 1-on-1 check-in calls directly in the app.' },
+              { icon: '👨‍🍳', title: 'Recipe Library', desc: "Browse Schalk's curated collection of animal-based meals and snacks." },
             ].map(f => (
-              <div key={f.title} style={{ background: '#141210', border: '1px solid #1E1A17', borderRadius: '16px', padding: '20px' }}>
+              <div key={f.title} style={{ background: f.highlight ? 'rgba(196,168,130,0.07)' : '#141210', border: f.highlight ? '1px solid rgba(196,168,130,0.3)' : '1px solid #1E1A17', borderRadius: '16px', padding: '20px' }}>
                 <div style={{ fontSize: '26px', marginBottom: '10px' }}>{f.icon}</div>
-                <div style={{ fontSize: '14px', fontWeight: 700, color: '#F7F3EE', marginBottom: '6px' }}>{f.title}</div>
+                <div style={{ fontSize: '14px', fontWeight: 700, color: f.highlight ? '#C4A882' : '#F7F3EE', marginBottom: '6px' }}>{f.title}</div>
                 <div style={{ fontSize: '12px', color: '#6B5E54', lineHeight: 1.6 }}>{f.desc}</div>
               </div>
             ))}
