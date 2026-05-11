@@ -13,7 +13,10 @@ export default function Paywall({ user, profile, mobile, onSignOut }) {
       {/* Top bar */}
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: mobile ? '14px 18px' : '18px 32px',
+        paddingTop: 'max(14px, env(safe-area-inset-top))',
+        paddingBottom: '14px',
+        paddingLeft: mobile ? '18px' : '32px',
+        paddingRight: mobile ? '18px' : '32px',
         borderBottom: '1px solid #EDE8E0', background: '#F7F3EE', flexShrink: 0,
       }}>
         <div style={{ fontSize: '13px', fontWeight: 800, color: '#1A1410' }}>The Schalk Method</div>
