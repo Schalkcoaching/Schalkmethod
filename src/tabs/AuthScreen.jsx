@@ -47,7 +47,7 @@ export default function AuthScreen({ onBack, initialMode }) {
     return (
       <div style={{ minHeight: '100vh', background: '#F7F3EE', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
         {/* Mobile top branding bar */}
-        <div style={{ background: '#1C1917', padding: '16px 24px 24px' }}>
+        <div style={{ background: '#1C1917', paddingTop: 'max(16px, env(safe-area-inset-top))', paddingBottom: '24px', paddingLeft: '24px', paddingRight: '24px' }}>
           {onBack && <button onClick={onBack} style={{ background: 'none', border: 'none', color: '#5C5550', fontSize: '12px', cursor: 'pointer', padding: 0, marginBottom: '12px' }}>← Back</button>}
           <div style={{ fontSize: '10px', color: '#5C5550', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '6px' }}>Welcome to</div>
           <div style={{ fontSize: '24px', fontWeight: 900, color: '#F7F3EE', lineHeight: 1.1 }}>The Schalk Method</div>
